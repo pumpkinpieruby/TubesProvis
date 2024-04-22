@@ -177,7 +177,58 @@ class PembayaranPage extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            // Add other details here
+            SizedBox(height: 20),
+            Text(
+              'Nama Pasien: John Doe',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              'Nomor Rekam Medis: 1729 - 1381- 11',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              'Tempat Tanggal Lahir: Jakarta, 01 Januari 1990',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              'Tanggal Pembayaran: 18 Mei 2022',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 20),
+            Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: () {
+                  // Aksi saat teks "Klik Untuk Melihat Detail Tagihan" diklik
+                  print('Teks "Klik Untuk Melihat Detail Tagihan" diklik');
+                },
+                child: Text(
+                  'Klik Untuk Melihat Detail Tagihan',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -207,7 +258,76 @@ class PembayaranPage extends StatelessWidget {
               height: 40,
               fit: BoxFit.fill,
             ),
-            // Add other BPJS details here
+            SizedBox(height: 20),
+            Text(
+              'Informasi Pembayaran',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 20,
+                fontWeight: FontWeight.bold,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 20),
+            Text(
+              'Nomor BPJS: 987654321',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              'Nama Pasien: John Doe',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              'Nomor Rekam Medis: 123456789',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              'Tempat Tanggal Lahir: Jakarta, 01 Januari 1990',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            Text(
+              'Tanggal Pembayaran: 20 April 2024',
+              style: TextStyle(
+                fontFamily: 'Poppins',
+                fontSize: 16,
+                color: Colors.black,
+              ),
+            ),
+            SizedBox(height: 20),
+            Align(
+              alignment: Alignment.centerRight,
+              child: GestureDetector(
+                onTap: () {
+                  // Aksi saat teks "Klik Untuk Melihat Detail Tagihan" diklik
+                  print('Teks "Klik Untuk Melihat Detail Tagihan" diklik');
+                },
+                child: Text(
+                  'Klik Untuk Melihat Detail Tagihan',
+                  style: TextStyle(
+                    fontFamily: 'Poppins',
+                    fontSize: 16,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.blue,
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
