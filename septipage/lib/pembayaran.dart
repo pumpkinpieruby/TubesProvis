@@ -14,13 +14,51 @@ class MyApp extends StatelessWidget {
 }
 
 class PembayaranPage extends StatelessWidget {
+  int _selectedIndex = 0; // Indeks item yang sedang dipilih
+
+  void _onItemTapped(BuildContext context, int index) {
+    // Navigasi ke halaman yang sesuai berdasarkan indeks ikon yang diklik
+    switch (index) {
+      case 0:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => HomePage()),
+        );
+        break;
+      case 1:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => DaftarDokter()),
+        );
+        break;
+      case 2:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Kartu()),
+        );
+        break;
+      case 3:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Pembayaran()),
+        );
+        break;
+      case 4:
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => Faq()),
+        );
+        break;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(228, 255, 255, 255),
         title: Text(
-          'Pembayaran', // Mengubah judul menjadi "Rekam Medis"
+          'Pembayaran', // Mengubah judul menjadi "Pembayaran"
           style: TextStyle(
             fontFamily: 'Poppins',
             fontSize: 26,
@@ -31,48 +69,82 @@ class PembayaranPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 20.0),
+        child: Padding(
+          padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 20.0),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  // Aksi saat teks "Riwayat Pembayaran" diklik
+                  print('Teks "Riwayat Pembayaran" diklik');
+                  // Tambahkan aksi lain sesuai kebutuhan
+                },
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Icon(
+                      Icons.history,
+                      size: 30,
+                      color: Colors.black,
+                    ),
+                    SizedBox(width: 10),
+                    Text(
+                      'Riwayat Pembayaran',
+                      style: TextStyle(
+                        fontFamily: 'Poppins',
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.blue, // Ubah warna teks menjadi biru untuk menunjukkan bisa diklik
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(height: 40), // Spasi sebelum info pembayaran
+              _buildInfoBox(context),
+              SizedBox(height: 20), // Spasi sebelum info BPJS
+              _buildBPJSInfo(context),
+            ],
+          ),
+        ),
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () => _onItemTapped(context, 2),
+        child: Icon(Icons.credit_card),
+        backgroundColor: Colors.lightBlue[100],
+        foregroundColor: Colors.black,
+        elevation: 2.0,
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(30.0),
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
+      bottomNavigationBar: BottomAppBar(
+        height: 100,
+        shape: CircularNotchedRectangle(),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceAround,
+          children: <Widget>[
+            Flexible(
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      // Aksi saat teks "Riwayat Pembayaran" diklik
-                      print('Teks "Riwayat Pembayaran" diklik');
-                      // Tambahkan aksi lain sesuai kebutuhan
-                    },
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        Icon(
-                          Icons.history,
-                          size: 30,
-                          color: Colors.black,
-                        ),
-                        SizedBox(width: 10),
-                        Text(
-                          'Riwayat Pembayaran',
-                          style: TextStyle(
-                            fontFamily: 'Poppins',
-                            fontSize: 16,
-                            fontWeight: FontWeight.bold,
-                            color: Colors.blue, // Ubah warna teks menjadi biru untuk menunjukkan bisa diklik
-                          ),
-                        ),
-                      ],
+                  IconButton(
+                    icon: Icon(Icons.home),
+                    onPressed: () => _onItemTapped(context, 0),
+                    color: _selectedIndex == 0 ? Colors.blue[400] : Colors.black,
+                  ),
+                  Text(
+                    'Beranda',
+                    style: TextStyle(
+                      color: _selectedIndex == 0 ? Colors.blue[400] : Colors.black,
                     ),
                   ),
-                  SizedBox(height: 40), // Spasi sebelum info pembayaran
-                  _buildInfoBox(context),
-                  SizedBox(height: 20), // Spasi sebelum info BPJS
-                  _buildBPJSInfo(context),
                 ],
               ),
             ),
+            // Add similar widgets for other icons and texts
           ],
         ),
       ),
@@ -105,58 +177,7 @@ class PembayaranPage extends StatelessWidget {
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 20),
-            Text(
-              'Nama Pasien: John Doe',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              'Nomor Rekam Medis: 1729 - 1381- 11',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              'Tempat Tanggal Lahir: Jakarta, 01 Januari 1990',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              'Tanggal Pembayaran: 18 Mei 2022',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(height: 20),
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: () {
-                  // Aksi saat teks "Klik Untuk Melihat Detail Tagihan" diklik
-                  print('Teks "Klik Untuk Melihat Detail Tagihan" diklik');
-                },
-                child: Text(
-                  'Klik Untuk Melihat Detail Tagihan',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
-            ),
+            // Add other details here
           ],
         ),
       ),
@@ -186,80 +207,10 @@ class PembayaranPage extends StatelessWidget {
               height: 40,
               fit: BoxFit.fill,
             ),
-            SizedBox(height: 20),
-            Text(
-              'Informasi Pembayaran',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Nomor BPJS: 987654321',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              'Nama Pasien: John Doe',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              'Nomor Rekam Medis: 123456789',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              'Tempat Tanggal Lahir: Jakarta, 01 Januari 1990',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              'Tanggal Pembayaran: 20 April 2024',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(height: 20),
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: () {
-                  // Aksi saat teks "Klik Untuk Melihat Detail Tagihan" diklik
-                  print('Teks "Klik Untuk Melihat Detail Tagihan" diklik');
-                },
-                child: Text(
-                  'Klik Untuk Melihat Detail Tagihan',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
-            ),
+            // Add other BPJS details here
           ],
         ),
       ),
     );
   }
 }
-
