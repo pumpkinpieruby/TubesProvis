@@ -42,7 +42,10 @@ class _KeluargaPageState extends State<KeluargaPage> {
           icon: Icon(Icons.arrow_back),
           color: Colors.black,
           onPressed: () {
-            // Aksi saat tombol ditekan
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Profile()), // Ganti dengan halaman homepage
+            );
           },
         ),
         title: Text(

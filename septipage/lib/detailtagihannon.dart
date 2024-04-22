@@ -23,7 +23,10 @@ class TagihanNon extends StatelessWidget {
           icon: Icon(Icons.arrow_back),
           color: Colors.black,
           onPressed: () {
-            Navigator.pop(context); // Navigate back to the previous screen
+            Navigator.pushReplacement(
+              context,
+              MaterialPageRoute(builder: (context) => Profile()), // Ganti dengan halaman homepage
+            );
           },
         ),
         title: Text(

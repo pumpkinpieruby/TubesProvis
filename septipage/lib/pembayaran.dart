@@ -14,51 +14,14 @@ class MyApp extends StatelessWidget {
 }
 
 class PembayaranPage extends StatelessWidget {
-  int _selectedIndex = 0; // Indeks item yang sedang dipilih
-
-  void _onItemTapped(BuildContext context, int index) {
-    // Navigasi ke halaman yang sesuai berdasarkan indeks ikon yang diklik
-    switch (index) {
-      case 0:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => HomePage()),
-        );
-        break;
-      case 1:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => DaftarDokter()),
-        );
-        break;
-      case 2:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Kartu()),
-        );
-        break;
-      case 3:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Pembayaran()),
-        );
-        break;
-      case 4:
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => Faq()),
-        );
-        break;
-    }
-  }
-
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Color.fromARGB(228, 255, 255, 255),
         title: Text(
-          'Pembayaran', // Mengubah judul menjadi "Pembayaran"
+          'Pembayaran', // Mengubah judul menjadi "Rekam Medis"
           style: TextStyle(
             fontFamily: 'Poppins',
             fontSize: 26,
@@ -69,48 +32,53 @@ class PembayaranPage extends StatelessWidget {
         centerTitle: true,
       ),
       body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  // Aksi saat teks "Riwayat Pembayaran" diklik
-                  print('Teks "Riwayat Pembayaran" diklik');
-                  // Tambahkan aksi lain sesuai kebutuhan
-                },
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    Icon(
-                      Icons.history,
-                      size: 30,
-                      color: Colors.black,
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 35.0, vertical: 20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      // Aksi saat teks "Riwayat Pembayaran" diklik
+                      print('Teks "Riwayat Pembayaran" diklik');
+                      // Tambahkan aksi lain sesuai kebutuhan
+                    },
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.end,
+                      children: [
+                        Icon(
+                          Icons.history,
+                          size: 30,
+                          color: Colors.black,
+                        ),
+                        SizedBox(width: 10),
+                        Text(
+                          'Riwayat Pembayaran',
+                          style: TextStyle(
+                            fontFamily: 'Poppins',
+                            fontSize: 16,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.blue, // Ubah warna teks menjadi biru untuk menunjukkan bisa diklik
+                          ),
+                        ),
+                      ],
                     ),
-                    SizedBox(width: 10),
-                    Text(
-                      'Riwayat Pembayaran',
-                      style: TextStyle(
-                        fontFamily: 'Poppins',
-                        fontSize: 16,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.blue, // Ubah warna teks menjadi biru untuk menunjukkan bisa diklik
-                      ),
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(height: 40), // Spasi sebelum info pembayaran
+                  _buildInfoBox(context),
+                  SizedBox(height: 20), // Spasi sebelum info BPJS
+                  _buildBPJSInfo(context),
+                ],
               ),
-              SizedBox(height: 40), // Spasi sebelum info pembayaran
-              _buildInfoBox(context),
-              SizedBox(height: 20), // Spasi sebelum info BPJS
-              _buildBPJSInfo(context),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: () => _onItemTapped(context, 2),
+        onPressed: () => _onItemTapped(2),
         child: Icon(Icons.credit_card),
         backgroundColor: Colors.lightBlue[100],
         foregroundColor: Colors.black,
@@ -132,19 +100,81 @@ class PembayaranPage extends StatelessWidget {
                 children: [
                   IconButton(
                     icon: Icon(Icons.home),
-                    onPressed: () => _onItemTapped(context, 0),
-                    color: _selectedIndex == 0 ? Colors.blue[400] : Colors.black,
+                    onPressed: () => _onItemTapped(0),
+                    color:
+                        _selectedIndex == 0 ? Colors.blue[400] : Colors.black,
                   ),
                   Text(
                     'Beranda',
                     style: TextStyle(
-                      color: _selectedIndex == 0 ? Colors.blue[400] : Colors.black,
+                      color:
+                          _selectedIndex == 0 ? Colors.blue[400] : Colors.black,
                     ),
                   ),
                 ],
               ),
             ),
-            // Add similar widgets for other icons and texts
+            Flexible(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.today_outlined),
+                    onPressed: () => _onItemTapped(1),
+                    color:
+                        _selectedIndex == 1 ? Colors.blue[400] : Colors.black,
+                  ),
+                  Text(
+                    'Jadwal Dokter',
+                    style: TextStyle(
+                      color:
+                          _selectedIndex == 1 ? Colors.blue[400] : Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(width: 16),
+            Flexible(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.account_balance_wallet),
+                    onPressed: () => _onItemTapped(3),
+                    color:
+                        _selectedIndex == 2 ? Colors.blue[400] : Colors.black,
+                  ),
+                  Text(
+                    'Pembayaran',
+                    style: TextStyle(
+                      color:
+                          _selectedIndex == 2 ? Colors.blue[400] : Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Flexible(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  IconButton(
+                    icon: Icon(Icons.chat),
+                    onPressed: () => _onItemTapped(4),
+                    color:
+                        _selectedIndex == 3 ? Colors.blue[400] : Colors.black,
+                  ),
+                  Text(
+                    'FAQ',
+                    style: TextStyle(
+                      color:
+                          _selectedIndex == 3 ? Colors.blue[400] : Colors.black,
+                    ),
+                  ),
+                ],
+              ),
+            ),
           ],
         ),
       ),
@@ -334,3 +364,4 @@ class PembayaranPage extends StatelessWidget {
     );
   }
 }
+
