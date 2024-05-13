@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:tubes_5_wavecare/forget.dart';
 import 'package:tubes_5_wavecare/homepage.dart';
 import 'package:tubes_5_wavecare/signup.dart';
@@ -11,11 +13,57 @@ class Login extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-  );
+      home: LoginPage(),
+    );
   }
 }
 
-class LoginPage extends StatelessWidget {
+class LoginPage extends StatefulWidget {
+  @override
+  _LoginPageState createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+
+  Future<void> _loginWithApi() async {
+    final Uri url = Uri.parse('http://localhost:2016/login');
+    final response = await http.post(
+      url,
+      headers: <String, String>{
+        'Content-Type': 'application/json; charset=UTF-8',
+      },
+      body: jsonEncode(<String, String>{
+        'email': _emailController.text,
+        'password': _passwordController.text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      // Login successful
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => homepage()),
+      );
+    } else {
+      // Login failed
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Login Failed'),
+          content: Text('Please check your email and password.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -25,7 +73,7 @@ class LoginPage extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            SizedBox(height: 40), // Menambahkan jarak dari atas
+            SizedBox(height: 40),
             Center(
               child: Text(
                 'Selamat Datang',
@@ -73,12 +121,13 @@ class LoginPage extends StatelessWidget {
                 border: Border.all(color: Colors.grey),
               ),
               child: TextField(
+                controller: _emailController,
                 obscureText: false,
                 decoration: InputDecoration(
                   hintText: 'Masukkan Email',
                   hintStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(133, 133, 133, 100),
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(133, 133, 133, 100),
                   ),
                   border: InputBorder.none,
                 ),
@@ -102,27 +151,26 @@ class LoginPage extends StatelessWidget {
                 border: Border.all(color: Colors.grey),
               ),
               child: TextField(
+                controller: _passwordController,
                 obscureText: true,
                 decoration: InputDecoration(
                   hintText: 'Masukkan Kata Sandi',
                   hintStyle: TextStyle(
-                  fontWeight: FontWeight.bold,
-                  color: Color.fromARGB(133, 133, 133, 100),
+                    fontWeight: FontWeight.bold,
+                    color: Color.fromARGB(133, 133, 133, 100),
                   ),
                   border: InputBorder.none,
                   suffixIcon: Icon(
                     Icons.visibility_off,
-                    color: Color(0xFF00A9FF), 
+                    color: Color(0xFF00A9FF),
                   ),
                 ),
               ),
-
             ),
             SizedBox(height: 10),
             Align(
               alignment: Alignment.centerRight,
-              child: 
-              GestureDetector(
+              child: GestureDetector(
                 onTap: () {
                   Navigator.push(
                     context,
@@ -142,12 +190,7 @@ class LoginPage extends StatelessWidget {
             SizedBox(height: 22),
             Center(
               child: ElevatedButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => homepage()),
-                  );
-                },
+                onPressed: _loginWithApi,
                 style: ElevatedButton.styleFrom(
                   backgroundColor: Color(0xFF00A9FF),
                   shape: RoundedRectangleBorder(
@@ -155,7 +198,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 child: Container(
-                  width: 220, // Atur lebar tombol
+                  width: 220,
                   child: Center(
                     child: Text(
                       'Masuk',
@@ -169,14 +212,14 @@ class LoginPage extends StatelessWidget {
                 ),
               ),
             ),
-            SizedBox(height: 70), // Menambahkan jarak di antara tombol dan tulisan berikutnya
+            SizedBox(height: 70),
             Center(
               child: Text(
                 'Anda Belum Memiliki Akun?',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 14,
-                  color:Color(0xFF00A9FF),
+                  color: Color(0xFF00A9FF),
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -197,7 +240,7 @@ class LoginPage extends StatelessWidget {
                   ),
                 ),
                 child: Container(
-                  width: 150, // Atur lebar tombol
+                  width: 150,
                   child: Center(
                     child: Text(
                       'Buat Akun',
