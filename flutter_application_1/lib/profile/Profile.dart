@@ -17,7 +17,12 @@ class Profile extends StatelessWidget {
   }
 }
 
-class HealthInfoPage extends StatelessWidget {
+class HealthInfoPage extends StatefulWidget {
+  @override
+  _HealthInfoPageState createState() => _HealthInfoPageState();
+}
+
+class _HealthInfoPageState extends State<HealthInfoPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -230,5 +235,4 @@ class HealthInfoPage extends StatelessWidget {
     ),
   );
 }
-
 }

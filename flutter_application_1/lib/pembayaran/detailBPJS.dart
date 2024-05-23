@@ -5,7 +5,12 @@ void main() {
   runApp(detailBPJS());
 }
 
-class detailBPJS extends StatelessWidget {
+class detailBPJS extends StatefulWidget {
+  @override
+  _detailBPJSState createState() => _detailBPJSState();
+}
+
+class _detailBPJSState extends State<detailBPJS> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

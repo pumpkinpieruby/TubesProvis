@@ -15,7 +15,32 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
+  @override
+  _SignUpState createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  // Controllers to capture user input
+  final TextEditingController _namaController = TextEditingController();
+  final TextEditingController _tanggalLahirController = TextEditingController();
+  final TextEditingController _nikController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _nomorTeleponController = TextEditingController();
+  final TextEditingController _bpjsController = TextEditingController();
+
+  @override
+  void dispose() {
+    // Dispose controllers when the widget is disposed
+    _namaController.dispose();
+    _tanggalLahirController.dispose();
+    _nikController.dispose();
+    _emailController.dispose();
+    _nomorTeleponController.dispose();
+    _bpjsController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,9 +52,9 @@ class SignUp extends StatelessWidget {
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
-        );
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
           },
         ),
         title: Text(
@@ -67,6 +92,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+                  controller: _namaController,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Nama Lengkap',
@@ -80,7 +106,7 @@ class SignUp extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Text(
-                'Tanggal Lahir' ,
+                'Tanggal Lahir',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 14,
@@ -96,6 +122,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextFormField(
+                  controller: _tanggalLahirController,
                   obscureText: false,
                   keyboardType: TextInputType.datetime,
                   decoration: InputDecoration(
@@ -126,6 +153,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+                  controller: _nikController,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Nomor Induk Kependudukan',
@@ -155,6 +183,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+                  controller: _emailController,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Email',
@@ -184,6 +213,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+                  controller: _nomorTeleponController,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Nomor Telepon',
@@ -213,6 +243,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+                  controller: _bpjsController,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Nomor BPJS',

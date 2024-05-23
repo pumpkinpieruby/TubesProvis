@@ -14,7 +14,12 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class AturUlang extends StatelessWidget {
+class AturUlang extends StatefulWidget {
+  @override
+  _AturUlangState createState() => _AturUlangState();
+}
+
+class _AturUlangState extends State<AturUlang> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(

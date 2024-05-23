@@ -15,7 +15,12 @@ class Laboratorium extends StatelessWidget {
   }
 }
 
-class HealthInfoPage extends StatelessWidget {
+class HealthInfoPage extends StatefulWidget {
+  @override
+  _HealthInfoPageState createState() => _HealthInfoPageState();
+}
+
+class _HealthInfoPageState extends State<HealthInfoPage> {
   final String pdfAssetPath = 'assets/sample.pdf'; // Path PDF lokal
 
   void _openPDFViewer(BuildContext context) {
@@ -132,11 +137,16 @@ class HealthInfoPage extends StatelessWidget {
   }
 }
 
-class PDFViewer extends StatelessWidget {
+class PDFViewer extends StatefulWidget {
   final String filePath;
 
   PDFViewer({required this.filePath});
 
+  @override
+  _PDFViewerState createState() => _PDFViewerState();
+}
+
+class _PDFViewerState extends State<PDFViewer> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -144,7 +154,7 @@ class PDFViewer extends StatelessWidget {
         title: Text('PDF Viewer'),
       ),
       body: PDFView(
-        filePath: filePath,
+        filePath: widget.filePath,
         enableSwipe: true,
         swipeHorizontal: false,
         autoSpacing: false,
