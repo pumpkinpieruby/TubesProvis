@@ -3,10 +3,10 @@ import 'package:flutter_pdfview/flutter_pdfview.dart';
 import 'rekamedis.dart';
 
 void main() {
-  runApp(laboratorium());
+  runApp(Laboratorium());
 }
 
-class laboratorium extends StatelessWidget {
+class Laboratorium extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

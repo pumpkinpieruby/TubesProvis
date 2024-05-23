@@ -28,31 +28,72 @@ class _LoginPageState extends State<LoginPage> {
   final _passwordController = TextEditingController();
 
   Future<void> _loginWithApi() async {
-    final Uri url = Uri.parse('http://localhost:2016/login');
+  final email = _emailController.text;
+  final password = _passwordController.text;
+  final Uri url = Uri.parse('http://127.0.0.1:8000/login/$email/$password');
+  final response = await http.get(url);
+
+  if (response.statusCode == 200) {
+    // Login successful
+    Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => homepage()),
+    );
+  } else {
+    // Login failed
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: Text('Login Failed'),
+        content: Text('Please check your email and password.'),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: Text('OK'),
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+  Future<void> _registerWithApi() async {
+    final email = _emailController.text;
+    final password = _passwordController.text;
+    final Uri url = Uri.parse('http://127.0.0.1:8000/register');
     final response = await http.post(
       url,
       headers: <String, String>{
         'Content-Type': 'application/json; charset=UTF-8',
       },
       body: jsonEncode(<String, String>{
-        'email': _emailController.text,
-        'password': _passwordController.text,
+        'email': email,
+        'password': password,
       }),
     );
 
     if (response.statusCode == 200) {
-      // Login successful
-      Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => homepage()),
-      );
-    } else {
-      // Login failed
+      // Registration successful
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Login Failed'),
-          content: Text('Please check your email and password.'),
+          title: Text('Registration Successful'),
+          content: Text('Your account has been created.'),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.pop(context),
+              child: Text('OK'),
+            ),
+          ],
+        ),
+      );
+    } else {
+      // Registration failed
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text('Registration Failed'),
+          content: Text('Please try again.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -62,7 +103,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     }
-  }
+  } 
 
   @override
   Widget build(BuildContext context) {

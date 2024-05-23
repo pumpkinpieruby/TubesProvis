@@ -77,7 +77,7 @@ class HealthInfoPage extends StatelessWidget {
         if (title == 'Laboratorium') {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => laboratorium()), // Halaman Laboratorium
+            MaterialPageRoute(builder: (context) => Laboratorium()), // Halaman Laboratorium
           );
         } else if (title == 'Radiologi') {
           Navigator.push(
@@ -127,7 +127,7 @@ class HealthInfoPage extends StatelessWidget {
                 if (title == 'Laboratorium') {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => laboratorium()), // Halaman Laboratorium
+                    MaterialPageRoute(builder: (context) => Laboratorium()), // Halaman Laboratorium
                   );
                 } else if (title == 'Radiologi') {
                   Navigator.push(
