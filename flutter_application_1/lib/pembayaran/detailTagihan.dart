@@ -6,7 +6,12 @@ void main() {
   runApp(detailTagihan());
 }
 
-class detailTagihan extends StatelessWidget {
+class detailTagihan extends StatefulWidget {
+  @override
+  _detailTagihanState createState() => _detailTagihanState();
+}
+
+class _detailTagihanState extends State<detailTagihan> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(

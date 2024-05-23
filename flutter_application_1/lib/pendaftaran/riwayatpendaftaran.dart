@@ -15,7 +15,12 @@ class riwayatpendaftaran extends StatelessWidget {
   }
 }
 
-class RegistrationHistoryPage extends StatelessWidget {
+class RegistrationHistoryPage extends StatefulWidget {
+  @override
+  _RegistrationHistoryPageState createState() => _RegistrationHistoryPageState();
+}
+
+class _RegistrationHistoryPageState extends State<RegistrationHistoryPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -69,12 +74,11 @@ class RegistrationHistoryPage extends StatelessWidget {
                       _buildRegistrationData('Poli', 'Umum'),
                       _buildRegistrationData('Nama Dokter', 'Dr. Jane Smith'),
                       _buildRegistrationData('Tanggal Pendaftaran', '18 April 2024'),
-                      _buildTagihanButton(context), // Melewatkan context sebagai parameter
+                      _buildTagihanButton(context),
                     ],
                   ),
                 ),
               ),
-
               SizedBox(height: 30),
               _buildUnderlinedItalicText('Riwayat Pendaftaran', Colors.red),
               SizedBox(height: 10),
@@ -181,7 +185,6 @@ class RegistrationHistoryPage extends StatelessWidget {
       ),
     );
   }
-
 }
 
 class TagihanPage extends StatelessWidget {

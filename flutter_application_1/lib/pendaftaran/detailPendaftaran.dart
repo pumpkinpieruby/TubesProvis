@@ -6,7 +6,12 @@ void main() {
   runApp(Pendaftaran3());
 }
 
-class Pendaftaran3 extends StatelessWidget {
+class Pendaftaran3 extends StatefulWidget {
+  @override
+  _Pendaftaran3State createState() => _Pendaftaran3State();
+}
+
+class _Pendaftaran3State extends State<Pendaftaran3> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -14,14 +19,14 @@ class Pendaftaran3 extends StatelessWidget {
       home: Scaffold(
         appBar: AppBar(
           leading: IconButton(
-          icon: Icon(Icons.arrow_back),
-          onPressed: () {
-            Navigator.pushReplacement(
-              context,
-              MaterialPageRoute(builder: (context) => Pendaftaran2()),
-            );
-          },
-        ),
+            icon: Icon(Icons.arrow_back),
+            onPressed: () {
+              Navigator.pushReplacement(
+                context,
+                MaterialPageRoute(builder: (context) => Pendaftaran2()),
+              );
+            },
+          ),
           title: Center(
             child: Text(
               'Detail Pendaftaran',

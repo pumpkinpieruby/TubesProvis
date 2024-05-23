@@ -14,7 +14,12 @@ class resepobat extends StatelessWidget {
   }
 }
 
-class ResepObat1 extends StatelessWidget {
+class ResepObat1 extends StatefulWidget {
+  @override
+  _ResepObat1State createState() => _ResepObat1State();
+}
+
+class _ResepObat1State extends State<ResepObat1> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
