@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/riwayatpendaftaran.dart';
-import 'homepage.dart';
+import 'package:tubes_5_wavecare/homepage.dart';
+import 'package:tubes_5_wavecare/pendaftaran/riwayatpendaftaran.dart';
 import 'ketersediaandokter.dart';
 
 void main() {

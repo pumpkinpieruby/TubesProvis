@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/DoctorDetailPage.dart';
-import 'package:tubes_5_wavecare/FAQ.dart';
+import 'package:tubes_5_wavecare/daftarDokter/DoctorDetailPage.dart';
+import 'package:tubes_5_wavecare/faq/FAQ.dart';
 import 'package:tubes_5_wavecare/homepage.dart';
 import 'package:tubes_5_wavecare/kartu.dart';
-import 'package:tubes_5_wavecare/pembayaran.dart';
+import 'package:tubes_5_wavecare/pembayaran/pembayaran.dart';
 
 void main() {
   runApp(DaftarDokterApp());

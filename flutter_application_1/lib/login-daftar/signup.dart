@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/login.dart';
+import 'package:tubes_5_wavecare/login-daftar/login.dart';
 import 'package:tubes_5_wavecare/setpassword.dart';
 
 void main() {

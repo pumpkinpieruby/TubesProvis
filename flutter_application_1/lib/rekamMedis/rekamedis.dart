@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'homepage.dart';
+import 'package:tubes_5_wavecare/homepage.dart';
 import 'laboratorium.dart';
 import 'radiologi.dart';
 

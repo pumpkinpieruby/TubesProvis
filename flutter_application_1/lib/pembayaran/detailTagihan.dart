@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/pembayaran.dart';
-import 'package:tubes_5_wavecare/pilihanpembayaran.dart';
+import 'package:tubes_5_wavecare/pembayaran/pembayaran.dart';
+import 'package:tubes_5_wavecare/pembayaran/pilihanpembayaran.dart';
 
 void main() {
   runApp(detailTagihan());

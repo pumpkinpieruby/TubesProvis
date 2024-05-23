@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/FAQ.dart';
-import 'package:tubes_5_wavecare/daftardokter.dart';
-import 'package:tubes_5_wavecare/detailBPJS.dart';
-import 'package:tubes_5_wavecare/detailTagihan.dart';
+import 'package:tubes_5_wavecare/daftarDokter/daftardokter.dart';
+import 'package:tubes_5_wavecare/faq/FAQ.dart';
 import 'package:tubes_5_wavecare/homepage.dart';
 import 'package:tubes_5_wavecare/kartu.dart';
+import 'package:tubes_5_wavecare/pembayaran/detailBPJS.dart';
+import 'package:tubes_5_wavecare/pembayaran/detailTagihan.dart';
 
 void main() {
   runApp(pembayaran());

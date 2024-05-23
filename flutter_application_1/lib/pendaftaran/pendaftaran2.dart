@@ -1,29 +1,29 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/ketersediaandokter.dart';
-import 'package:tubes_5_wavecare/riwayatpendaftaran.dart';
+import 'package:tubes_5_wavecare/pendaftaran/detailPendaftaran.dart';
+import 'package:tubes_5_wavecare/pendaftaran/ketersediaandokter.dart';
 
 void main() {
-  runApp(user());
+  runApp(Pendaftaran2());
 }
 
-class user extends StatelessWidget {
+class Pendaftaran2 extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: siapaUser(),
+      home: HealthInfoPage(),
     );
   }
 }
 
-class siapaUser extends StatefulWidget {
+class HealthInfoPage extends StatefulWidget {
   @override
-  _siapaUserState createState() => _siapaUserState();
+  _HealthInfoPageState createState() => _HealthInfoPageState();
 }
 
-class _siapaUserState extends State<siapaUser> {
+class _HealthInfoPageState extends State<HealthInfoPage> {
   List<Map<String, List<String>>> poliContent = [
     {
-      'Pilih User yang Akan Mendaftar': ['Gepard', 'Serval', 'Lynx', 'Landau'],
+      'Dr. Dian Ismaya': ['Senin (10.00)', 'Rabu (16.00)'],
     },
   ];
 
@@ -96,7 +96,7 @@ class _siapaUserState extends State<siapaUser> {
                 // Lakukan aksi lanjutan di sini (misalnya, navigasi ke halaman beranda)
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => riwayatpendaftaran()), // Ganti dengan halaman Homepage yang benar
+                  MaterialPageRoute(builder: (context) => Pendaftaran3()), // Ganti dengan halaman Homepage yang benar
                 );
               } else {
                 // Tampilkan pesan kesalahan jika tidak ada hari yang dipilih

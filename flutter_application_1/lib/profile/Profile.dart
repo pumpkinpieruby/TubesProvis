@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/keluarga.dart';
-import 'package:tubes_5_wavecare/login.dart';
+import 'package:tubes_5_wavecare/homepage.dart';
+import 'package:tubes_5_wavecare/login-daftar/login.dart';
+import 'package:tubes_5_wavecare/profile/keluarga.dart';
 import 'package:tubes_5_wavecare/setpassword.dart';
-import 'homepage.dart';
 
 void main() {
   runApp(Profile());
@@ -70,7 +70,7 @@ class HealthInfoPage extends StatelessWidget {
                     SizedBox(height: 20), // Spasi sebelum konten tambahan
                     _buildDetailItem(
                       title: 'Nama Lengkap',
-                      content: 'XXXX XXXXX',
+                      content: 'Raya Cahya',
                     ),
                     SizedBox(height: 10),
                     _buildDetailItem(
@@ -80,22 +80,22 @@ class HealthInfoPage extends StatelessWidget {
                     SizedBox(height: 10),
                     _buildDetailItem(
                       title: 'Alamat Email',
-                      content: 'yyyy@gmail.com',
+                      content: 'raya@gmail.com',
                     ),
                     SizedBox(height: 10),
                     _buildDetailItem(
                       title: 'NIK',
-                      content: 'XXXXXXXXXXXXX',
+                      content: '1654378922',
                     ),
                     SizedBox(height: 10),
                     _buildDetailItem(
                       title: 'Nomor BPJS',
-                      content: 'XXXXXXXXXXXX',
+                      content: '1782934096',
                     ),
                     SizedBox(height: 10),
                     _buildDetailItem(
                       title: 'Tanggal Lahir',
-                      content: 'XX/XX/XXXX',
+                      content: '24/08/2003',
                     ),
                   ],
                 ),
@@ -120,7 +120,7 @@ class HealthInfoPage extends StatelessWidget {
                   _buildOptionItem(
                     context,
                     icon: Icons.people,
-                    text: 'Keluarga',
+                    text: 'Kontak Darurat Pasien',
                   ),
                   _buildOptionItem(
                     context,
@@ -198,12 +198,12 @@ class HealthInfoPage extends StatelessWidget {
         
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => LoginPage()), 
+          MaterialPageRoute(builder: (context) => Login()), 
         );
-      }if (text == 'Keluarga') {
+      }if (text == 'Kontak Darurat Pasien') {
         Navigator.pushReplacement(
           context,
-          MaterialPageRoute(builder: (context) => keluarga()), 
+          MaterialPageRoute(builder: (context) => Keluarga()), 
         );
       }if (text == 'Ubah Kata Sandi') {
         Navigator.pushReplacement(

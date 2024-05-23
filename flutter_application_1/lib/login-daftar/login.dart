@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'package:tubes_5_wavecare/forget.dart';
 import 'package:tubes_5_wavecare/homepage.dart';
-import 'package:tubes_5_wavecare/signup.dart';
+import 'package:tubes_5_wavecare/login-daftar/signup.dart';
 
 void main() {
   runApp(Login());

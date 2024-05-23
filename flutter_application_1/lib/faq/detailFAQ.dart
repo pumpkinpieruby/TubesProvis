@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/FAQ.dart';
+import 'package:tubes_5_wavecare/faq/FAQ.dart';
 
 void main() {
   runApp(const detailFAQ());

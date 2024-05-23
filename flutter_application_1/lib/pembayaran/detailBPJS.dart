@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/pembayaran.dart';
+import 'package:tubes_5_wavecare/pembayaran/pembayaran.dart';
 
 void main() {
   runApp(detailBPJS());

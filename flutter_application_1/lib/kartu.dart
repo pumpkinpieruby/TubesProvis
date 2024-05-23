@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/FAQ.dart';
-import 'pembayaran.dart';
-import 'daftardokter.dart';
+import 'package:tubes_5_wavecare/daftarDokter/daftardokter.dart';
+import 'package:tubes_5_wavecare/faq/FAQ.dart';
+import 'package:tubes_5_wavecare/pembayaran/pembayaran.dart';
 import 'homepage.dart';
 
 void main() {

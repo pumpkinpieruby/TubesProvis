@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/pendaftaran.dart';
-import 'package:tubes_5_wavecare/pendaftaran2.dart';
-// import 'homepage.dart';
+import 'package:tubes_5_wavecare/pendaftaran/pendaftaran.dart';
+import 'package:tubes_5_wavecare/pendaftaran/pendaftaran2.dart';
 
 void main() {
   runApp(ketersediaandokter());

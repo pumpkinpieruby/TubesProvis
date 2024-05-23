@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:tubes_5_wavecare/detailTagihan.dart';
+import 'package:tubes_5_wavecare/pembayaran/detailTagihan.dart';
+import 'package:tubes_5_wavecare/pembayaran/pembayaran.dart';
 
 void main() {
   runApp(const pilihanPembayaran());
@@ -58,11 +59,10 @@ class PaymentOptionsPage extends StatelessWidget {
               SizedBox(height: 10), // Mengatur jarak antara teks dan rectangle box
               GestureDetector(
                 onTap: () {
-                  // Fungsi untuk pindah ke halaman berikutnya
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => NextPage()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => pembayaran()),
+                  );
                 },
                 child: PaymentOptionItem(
                   title: 'Mandiri Transfer',
@@ -72,11 +72,10 @@ class PaymentOptionsPage extends StatelessWidget {
               SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
-                  // Fungsi untuk pindah ke halaman berikutnya
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => NextPage()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => pembayaran()),
+                  );
                 },
                 child: PaymentOptionItem(
                   title: 'BCA Transfer',
@@ -86,11 +85,10 @@ class PaymentOptionsPage extends StatelessWidget {
               SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
-                  // Fungsi untuk pindah ke halaman berikutnya
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => NextPage()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => pembayaran()),
+                  );
                 },
                 child: PaymentOptionItem(
                   title: 'BRI Transfer',
@@ -100,11 +98,10 @@ class PaymentOptionsPage extends StatelessWidget {
               SizedBox(height: 10),
               GestureDetector(
                 onTap: () {
-                  // Fungsi untuk pindah ke halaman berikutnya
-                  // Navigator.push(
-                  //   context,
-                  //   MaterialPageRoute(builder: (context) => NextPage()),
-                  // );
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => pembayaran()),
+                  );
                 },
                 child: PaymentOptionItem(
                   title: 'BNI Transfer',
