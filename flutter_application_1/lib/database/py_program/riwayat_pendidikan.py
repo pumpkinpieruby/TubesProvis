@@ -4,24 +4,25 @@ import sqlite3
 
 router = APIRouter()
 
-# Pydantic model for urgent contact data
+# Pydantic model for RiwayatPendidikan data
 class RiwayatPendidikan(BaseModel):
     id_riwayat_pend_dokter: int
-    univ: str
-    prodi: str
-    tahun_lulus: int
+    S1: str | None = None
+    S2: str | None = None
+    S3: str | None = None
 
 @router.get("/init/", status_code=status.HTTP_201_CREATED)
 def init_db():
     try:
         conn = sqlite3.connect("carewave.db")
         cursor = conn.cursor()
+        cursor.execute("DROP TABLE IF EXISTS RiwayatPendidikan")  # Drop the existing table if it exists
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS RiwayatPendidikan (
                 id_riwayat_pend_dokter INTEGER PRIMARY KEY AUTOINCREMENT,
-                univ TEXT NOT NULL,
-                prodi TEXT NOT NULL,
-                tahun_lulus INTEGER NOT NULL
+                S1 TEXT,
+                S2 TEXT,
+                S3 TEXT
             )"""
         )
         conn.commit()
@@ -37,9 +38,9 @@ def add_riwayat_pendidikan(riwayat_pendidikan: RiwayatPendidikan):
     cursor = conn.cursor()
     try:
         cursor.execute(
-            """INSERT INTO RiwayatPendidikan (id_riwayat_pend_dokter, univ, prodi, tahun_lulus)
+            """INSERT INTO RiwayatPendidikan (id_riwayat_pend_dokter, S1, S2, S3)
             VALUES (?, ?, ?, ?)""",
-            (riwayat_pendidikan.id_riwayat_pend_dokter, riwayat_pendidikan.univ, riwayat_pendidikan.prodi, riwayat_pendidikan.tahun_lulus)
+            (riwayat_pendidikan.id_riwayat_pend_dokter, riwayat_pendidikan.S1, riwayat_pendidikan.S2, riwayat_pendidikan.S3)
         )
         conn.commit()
     except sqlite3.IntegrityError:
@@ -47,7 +48,6 @@ def add_riwayat_pendidikan(riwayat_pendidikan: RiwayatPendidikan):
     finally:
         conn.close()
     return {"message": "Riwayat pendidikan added successfully"}
-
 
 @router.get("/getRiwayatPendidikan/{id_riwayat_pend_dokter}", status_code=status.HTTP_200_OK)
 def get_riwayat_pendidikan(id_riwayat_pend_dokter: int):
@@ -60,9 +60,9 @@ def get_riwayat_pendidikan(id_riwayat_pend_dokter: int):
         return [
             {
                 "id_riwayat_pend_dokter": pendidikan[0],
-                "univ": pendidikan[1],
-                "prodi": pendidikan[2],
-                "tahun_lulus": pendidikan[3],
+                "S1": pendidikan[1],
+                "S2": pendidikan[2],
+                "S3": pendidikan[3],
             }
             for pendidikan in riwayat
         ]

@@ -1,10 +1,11 @@
+# routers/jadwal_dokter.py
 from pydantic import BaseModel
 from fastapi import APIRouter, HTTPException, status
 import sqlite3
 
 router = APIRouter()
 
-# Pydantic model for urgent contact data
+# Pydantic model for JadwalDokter data
 class JadwalDokter(BaseModel):
     id_jadwal_dokter: int
     hari: str
@@ -42,12 +43,11 @@ def add_jadwal_dokter(jadwal_dokter: JadwalDokter):
             (jadwal_dokter.id_jadwal_dokter, jadwal_dokter.hari, jadwal_dokter.jam_masuk, jadwal_dokter.jam_selesai)
         )
         conn.commit()
-    except sqlite3.IntegrityError:
-        raise HTTPException(status_code=400, detail="Error adding jadwal dokter")
+    except sqlite3.IntegrityError as e:
+        raise HTTPException(status_code=400, detail=f"Error adding jadwal dokter: {e}")
     finally:
         conn.close()
     return {"message": "Jadwal dokter added successfully"}
-
 
 @router.get("/getJadwalDokter/{id_jadwal_dokter}", status_code=status.HTTP_200_OK)
 def get_jadwal_dokter(id_jadwal_dokter: int):
