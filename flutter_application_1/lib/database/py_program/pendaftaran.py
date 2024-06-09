@@ -1,16 +1,27 @@
+<<<<<<< HEAD
 from fastapi import APIRouter, HTTPException, Depends, status
 from pydantic import BaseModel
 from typing import List, Optional
+=======
+from pydantic import BaseModel
+from fastapi import APIRouter, HTTPException, status
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
 import sqlite3
 
 router = APIRouter()
 
+<<<<<<< HEAD
 class Pendaftaran(BaseModel):
     id_pendaftaran: Optional[int] = None
+=======
+# Pydantic model for registration data
+class Pendaftaran(BaseModel):
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
     user_id: int
     dokter_id: int
     tanggal: str
     jam: str
+<<<<<<< HEAD
     hari: Optional[str] = ""
     nama_pasien: Optional[str] = ""
     nama_dokter: Optional[str] = ""
@@ -54,10 +65,45 @@ class BPJSDetail(BaseModel):
 
 @router.post("/addPendaftaran", status_code=status.HTTP_201_CREATED)
 def add_pendaftaran(pendaftaran: Pendaftaran):
+=======
+    hari: str  # Menambahkan atribut hari
+
+# Init db for pendaftaran
+@router.get("/init_pendaftaran/", status_code=status.HTTP_201_CREATED)
+def init_db_pendaftaran():
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
     try:
         conn = sqlite3.connect("carewave.db")
         cursor = conn.cursor()
         cursor.execute(
+<<<<<<< HEAD
+=======
+            """CREATE TABLE IF NOT EXISTS pendaftaran (
+                id_pendaftaran INTEGER PRIMARY KEY AUTOINCREMENT,
+                user_id INTEGER NOT NULL,
+                dokter_id INTEGER NOT NULL,
+                tanggal TEXT NOT NULL,
+                jam TEXT NOT NULL,
+                hari TEXT NOT NULL,  -- Menambahkan kolom untuk hari
+                FOREIGN KEY (user_id) REFERENCES user (user_id),
+                FOREIGN KEY (dokter_id) REFERENCES dokter (dokter_id)
+            )"""
+        )
+        conn.commit()
+    except Exception as e:
+        return {"status": f"Error saat membuat tabel: {e}"}
+    finally:
+        conn.close()
+    return {"status": "Berhasil membuat tabel pendaftaran"}
+
+# Adding registration
+@router.post("/addPendaftaran", status_code=status.HTTP_201_CREATED)
+def add_pendaftaran(pendaftaran: Pendaftaran):
+    conn = sqlite3.connect("carewave.db")
+    cursor = conn.cursor()
+    try:
+        cursor.execute(
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
             """INSERT INTO pendaftaran (user_id, dokter_id, tanggal, jam, hari)
             VALUES (?, ?, ?, ?, ?)""",
             (pendaftaran.user_id, pendaftaran.dokter_id, pendaftaran.tanggal, pendaftaran.jam, pendaftaran.hari)
@@ -69,6 +115,7 @@ def add_pendaftaran(pendaftaran: Pendaftaran):
         conn.close()
     return {"message": "Registration added successfully"}
 
+<<<<<<< HEAD
 @router.get("/getPendaftaran/{id_pendaftaran}", response_model=PendaftaranDetail)
 def get_pendaftaran(id_pendaftaran: int):
     conn = sqlite3.connect("carewave.db")
@@ -97,6 +144,10 @@ def get_pendaftaran(id_pendaftaran: int):
     raise HTTPException(status_code=404, detail="Pendaftaran not found")
 
 @router.get("/getPendaftaran/{user_id}", response_model=List[Pendaftaran], status_code=status.HTTP_200_OK)
+=======
+# Getting all registrations for a user
+@router.get("/getPendaftaran/{user_id}", status_code=status.HTTP_200_OK)
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
 def get_pendaftaran(user_id: int):
     conn = sqlite3.connect("carewave.db")
     cursor = conn.cursor()
@@ -106,6 +157,10 @@ def get_pendaftaran(user_id: int):
     if registrations:
         return [
             {
+<<<<<<< HEAD
+=======
+                "id_pendaftaran": registration[0],
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
                 "user_id": registration[1],
                 "dokter_id": registration[2],
                 "tanggal": registration[3],
@@ -115,6 +170,7 @@ def get_pendaftaran(user_id: int):
             for registration in registrations
         ]
     raise HTTPException(status_code=404, detail="No registrations found")
+<<<<<<< HEAD
 
 @router.get("/getAllPendaftaran/{user_id}", response_model=List[Pendaftaran])
 def get_all_pendaftaran(user_id: int):
@@ -252,3 +308,5 @@ def get_bpjs_detail(user_id: int):
             "tanggal_pembayaran": bpjs_detail[4]
         }
     raise HTTPException(status_code=404, detail="BPJS detail not found")
+=======
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9

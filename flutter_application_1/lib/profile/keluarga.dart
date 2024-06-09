@@ -33,7 +33,11 @@ class _KeluargaState extends State<KeluargaPage> {
   bool _validateTelepon = false;
 
   Future<void> _submitData() async {
+<<<<<<< HEAD
     final url = Uri.parse('http://127.0.0.1:8001/contacts/addUrgentContact');
+=======
+    final url = Uri.parse('http://127.0.0.1:8000/contacts/addUrgentContact');
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
 
     final data = {
       'urgent_contact_name': _contactNameController.text,
@@ -222,8 +226,12 @@ class _KeluargaState extends State<KeluargaPage> {
                     controller: _contactDescController,
                     decoration: InputDecoration(
                       labelText: 'Keterangan',
+<<<<<<< HEAD
                       errorText:
                           _validateHubungan ? 'Keterangan harus diisi' : null,
+=======
+                      errorText: _validateHubungan ? 'Keterangan harus diisi' : null,
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -236,8 +244,12 @@ class _KeluargaState extends State<KeluargaPage> {
                     controller: _contactPhoneController,
                     decoration: InputDecoration(
                       labelText: 'Nomor Telepon',
+<<<<<<< HEAD
                       errorText:
                           _validateTelepon ? 'Nomor telepon harus diisi' : null,
+=======
+                      errorText: _validateTelepon ? 'Nomor telepon harus diisi' : null,
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -254,9 +266,13 @@ class _KeluargaState extends State<KeluargaPage> {
                         _validateTelepon = _contactPhoneController.text.isEmpty;
                       });
 
+<<<<<<< HEAD
                       if (!_validateNama &&
                           !_validateHubungan &&
                           !_validateTelepon) {
+=======
+                      if (!_validateNama && !_validateHubungan && !_validateTelepon) {
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
                         _submitData();
                       }
                     },

@@ -2,6 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:tubes_5_wavecare/login-daftar/login.dart';
+<<<<<<< HEAD
+=======
+//  import 'package:tubes_5_wavecare/setpassword.dart';
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
 
 void main() {
   runApp(MyApp());
@@ -29,6 +33,7 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _bpjsController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+<<<<<<< HEAD
   final TextEditingController _confirmPasswordController =
       TextEditingController();
 
@@ -42,6 +47,11 @@ class _SignUpState extends State<SignUp> {
     }
 
     final url = Uri.parse('http://127.0.0.1:8001/user/register/');
+=======
+
+  Future<void> _submitData() async {
+    final url = Uri.parse('http://127.0.0.1:8000/user/register/');
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
 
     final response = await http.post(
       url,
@@ -65,6 +75,7 @@ class _SignUpState extends State<SignUp> {
       // Navigate to the next screen
       Navigator.push(
         context,
+<<<<<<< HEAD
         MaterialPageRoute(builder: (context) => LoginPage()),
       );
     } else {
@@ -72,6 +83,12 @@ class _SignUpState extends State<SignUp> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Failed to register. Please try again.')),
       );
+=======
+        MaterialPageRoute(builder: (context) => Login()),
+      );
+    } else {
+      print('Failed to create user');
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
     }
   }
 
@@ -277,7 +294,11 @@ class _SignUpState extends State<SignUp> {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+<<<<<<< HEAD
                   controller: _bpjsController,
+=======
+                   controller: _bpjsController,
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Nomor BPJS',
@@ -337,7 +358,11 @@ class _SignUpState extends State<SignUp> {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+<<<<<<< HEAD
                   controller: _confirmPasswordController,
+=======
+                  controller: _passwordController,
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
                   obscureText: true, // Menyembunyikan input
                   decoration: InputDecoration(
                     hintText: 'Masukkan Kembali Kata Sandi',
@@ -349,7 +374,11 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
+<<<<<<< HEAD
               SizedBox(height: 32),
+=======
+                SizedBox(height: 32),
+>>>>>>> 264c27a619a9c038928accefda1f718701ea38e9
               Center(
                 child: ElevatedButton(
                   onPressed: _submitData,
