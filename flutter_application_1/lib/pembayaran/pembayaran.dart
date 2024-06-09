@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:tubes_5_wavecare/daftarDokter/daftardokter.dart';
 import 'package:tubes_5_wavecare/faq/FAQ.dart';
 import 'package:tubes_5_wavecare/homepage.dart';
@@ -26,6 +28,35 @@ class PembayaranPage extends StatefulWidget {
 
 class _PembayaranPageState extends State<PembayaranPage> {
   int _selectedIndex = 3; // Indeks item yang sedang dipilih
+  List<Map<String, dynamic>> paymentHistory = [];
+  String token = ''; // Simpan token setelah login
+  int userId = 1; // Asumsikan kita memiliki user ID setelah login
+
+  @override
+  void initState() {
+    super.initState();
+    fetchPaymentHistory();
+  }
+
+  Future<void> fetchPaymentHistory() async {
+    final url = Uri.parse(
+        'http://127.0.0.1:8001/pendaftaran/getPaymentHistory/$userId');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        paymentHistory =
+            List<Map<String, dynamic>>.from(json.decode(response.body));
+      });
+    } else {
+      print('Failed to fetch payment history');
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
@@ -62,6 +93,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
         break;
     }
   }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -110,9 +142,9 @@ class _PembayaranPageState extends State<PembayaranPage> {
                 ),
               ),
               SizedBox(height: 40),
-              InfoBox(),
-              SizedBox(height: 20),
-              BPJSInfo(),
+              ...paymentHistory
+                  .map((history) => _buildPaymentInfoBox(history))
+                  .toList(),
             ],
           ),
         ),
@@ -220,23 +252,28 @@ class _PembayaranPageState extends State<PembayaranPage> {
       ),
     );
   }
-}
 
-class InfoBox extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
+  Widget _buildPaymentInfoBox(Map<String, dynamic> history) {
     return GestureDetector(
       onTap: () {
-        print('Info box diklik untuk melihat detail tagihan');
-        // Implement action here
-        Navigator.push(
-          context,
-          MaterialPageRoute(builder: (context) => detailTagihan()),
-        );
+        if (history['bpjs_number'] != null) {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => detailBPJS()),
+          );
+        } else {
+          Navigator.push(
+            context,
+            MaterialPageRoute(
+                builder: (context) =>
+                    detailTagihan(idPendaftaran: history['id_pendaftaran'])),
+          );
+        }
       },
       child: Container(
         width: double.infinity,
         padding: EdgeInsets.all(20),
+        margin: EdgeInsets.symmetric(vertical: 10),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(15),
           color: Colors.lightBlue[100],
@@ -245,18 +282,17 @@ class InfoBox extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Informasi Pembayaran',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
+            history['bpjs_number'] != null
+                ? Image.network(
+                    'assets/images/bpjs.png',
+                    width: 250,
+                    height: 40,
+                    fit: BoxFit.fill,
+                  )
+                : Container(),
             SizedBox(height: 20),
             Text(
-              'Nama Pasien: John Doe',
+              'Nama Pasien: ${history['nama_pasien']}',
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 16,
@@ -264,7 +300,7 @@ class InfoBox extends StatelessWidget {
               ),
             ),
             Text(
-              'Nomor Rekam Medis: 1729 - 1381- 11',
+              'Nomor Rekam Medis: ${history['nomor_rekam_medis']}',
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 16,
@@ -272,7 +308,7 @@ class InfoBox extends StatelessWidget {
               ),
             ),
             Text(
-              'Tempat Tanggal Lahir: Jakarta, 01 Januari 1990',
+              'Tempat Tanggal Lahir: ${history['tanggal_lahir']}',
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 16,
@@ -280,130 +316,41 @@ class InfoBox extends StatelessWidget {
               ),
             ),
             Text(
-              'Tanggal Pembayaran: 18 Mei 2022',
+              'Tanggal Pembayaran: ${history['tanggal_pembayaran']}',
               style: TextStyle(
                 fontFamily: 'Poppins',
                 fontSize: 16,
                 color: Colors.black,
               ),
             ),
-            SizedBox(height: 20),
-            Align(
-              alignment: Alignment.centerRight,
-              child: GestureDetector(
-                onTap: () {
-                  print('Teks "Klik Untuk Melihat Detail Tagihan" diklik');
-                  // Implement action here
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => detailTagihan()),
-                  );
-                },
-                child: Text(
-                  'Klik Untuk Melihat Detail Tagihan',
-                  style: TextStyle(
-                    fontFamily: 'Poppins',
-                    fontSize: 16,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.blue,
-                  ),
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class BPJSInfo extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        print('Info box BPJS diklik untuk melihat detail BPJS');
-        // Implement action here
-      },
-      child: Container(
-        width: double.infinity,
-        padding: EdgeInsets.all(20),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(15),
-          color: Colors.lightBlue[100],
-          border: Border.all(color: Colors.grey, width: 2.0),
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Image.network(
-              'assets/images/bpjs.png', // Path gambar BPJS dari asset
-              width: 250,
-              height: 40,
-              fit: BoxFit.fill,
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Informasi Pembayaran',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 20,
-                fontWeight: FontWeight.bold,
-                color: Colors.black,
-              ),
-            ),
-            SizedBox(height: 20),
-            Text(
-              'Nomor BPJS: 987654321',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              'Nama Pasien: John Doe',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              'Nomor Rekam Medis: 123456789',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              'Tempat Tanggal Lahir: Jakarta, 01 Januari 1990',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
-            Text(
-              'Tanggal Pembayaran: 20 April 2024',
-              style: TextStyle(
-                fontFamily: 'Poppins',
-                fontSize: 16,
-                color: Colors.black,
-              ),
-            ),
+            history['bpjs_number'] == null
+                ? Text(
+                    'Total Tagihan: Rp.${history['total_tagihan'].toStringAsFixed(2)}',
+                    style: TextStyle(
+                      fontFamily: 'Poppins',
+                      fontSize: 16,
+                      color: Colors.black,
+                    ),
+                  )
+                : Container(),
             SizedBox(height: 20),
             Align(
               alignment: Alignment.centerRight,
               child: GestureDetector(
                 onTap: () {
-                  print('Teks "Klik Untuk Melihat Detail Tagihan" diklik');
-                  // Implement action here
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => detailBPJS()),
-                  );
+                  if (history['bpjs_number'] != null) {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => detailBPJS()),
+                    );
+                  } else {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                          builder: (context) => detailTagihan(
+                              idPendaftaran: history['id_pendaftaran'])),
+                    );
+                  }
                 },
                 child: Text(
                   'Klik Untuk Melihat Detail Tagihan',

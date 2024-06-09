@@ -14,7 +14,8 @@ class pilihanPembayaran extends StatelessWidget {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 255, 255)),
+        colorScheme: ColorScheme.fromSeed(
+            seedColor: const Color.fromARGB(255, 255, 255, 255)),
         useMaterial3: true,
       ),
       home: const PaymentOptionsPage(),
@@ -35,9 +36,10 @@ class PaymentOptionsPage extends StatelessWidget {
           color: Colors.black,
           onPressed: () {
             Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => detailTagihan()),
-                  );
+              context,
+              MaterialPageRoute(
+                  builder: (context) => detailTagihan(idPendaftaran: 1)),
+            );
           },
         ),
         title: Text(
@@ -56,7 +58,8 @@ class PaymentOptionsPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SizedBox(height: 10), // Mengatur jarak antara teks dan rectangle box
+              SizedBox(
+                  height: 10), // Mengatur jarak antara teks dan rectangle box
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -66,7 +69,8 @@ class PaymentOptionsPage extends StatelessWidget {
                 },
                 child: PaymentOptionItem(
                   title: 'Mandiri Transfer',
-                  logo: Image.asset('assets/images/mandiri.png'), // Ganti dengan logo yang sesuai
+                  logo: Image.asset(
+                      'assets/images/mandiri.png'), // Ganti dengan logo yang sesuai
                 ),
               ),
               SizedBox(height: 10),
@@ -79,7 +83,8 @@ class PaymentOptionsPage extends StatelessWidget {
                 },
                 child: PaymentOptionItem(
                   title: 'BCA Transfer',
-                  logo: Image.asset('assets/images/bca.png'), // Ganti dengan logo yang sesuai
+                  logo: Image.asset(
+                      'assets/images/bca.png'), // Ganti dengan logo yang sesuai
                 ),
               ),
               SizedBox(height: 10),
@@ -92,7 +97,8 @@ class PaymentOptionsPage extends StatelessWidget {
                 },
                 child: PaymentOptionItem(
                   title: 'BRI Transfer',
-                  logo: Image.asset('assets/images/bri.png'), // Ganti dengan logo yang sesuai
+                  logo: Image.asset(
+                      'assets/images/bri.png'), // Ganti dengan logo yang sesuai
                 ),
               ),
               SizedBox(height: 10),
@@ -105,7 +111,8 @@ class PaymentOptionsPage extends StatelessWidget {
                 },
                 child: PaymentOptionItem(
                   title: 'BNI Transfer',
-                  logo: Image.asset('assets/images/bni.png'), // Ganti dengan logo yang sesuai
+                  logo: Image.asset(
+                      'assets/images/bni.png'), // Ganti dengan logo yang sesuai
                 ),
               ),
             ],

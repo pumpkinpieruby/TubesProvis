@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_5_wavecare/profile/Profile.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
   runApp(Keluarga());
@@ -16,30 +18,72 @@ class Keluarga extends StatelessWidget {
 
 class KeluargaPage extends StatefulWidget {
   @override
-  _KeluargaPageState createState() => _KeluargaPageState();
+  _KeluargaState createState() => _KeluargaState();
 }
 
-class _KeluargaPageState extends State<KeluargaPage> {
-  bool _showForm = false; // Untuk mengontrol apakah menampilkan formulir atau tidak
+class _KeluargaState extends State<KeluargaPage> {
+  final TextEditingController _contactNameController = TextEditingController();
+  final TextEditingController _contactDescController = TextEditingController();
+  final TextEditingController _contactPhoneController = TextEditingController();
 
-  // Deklarasi controller
-  TextEditingController _namaController = TextEditingController();
-  TextEditingController _hubunganController = TextEditingController();
-  TextEditingController _teleponController = TextEditingController();
-
-  // Variabel untuk validasi
+  final List<Map<String, String>> _kontakList = [];
+  bool _showForm = false;
   bool _validateNama = false;
   bool _validateHubungan = false;
   bool _validateTelepon = false;
 
-  List<Map<String, String>> _kontakList = [
-    {
-      'nama': 'Gepard',
-      'keterangan': 'ANAK PASIEN',
-      'telepon': '081261927199',
-    },
-    // Tambahkan daftar kontak darurat pasien yang sudah ada di sini
-  ];
+  Future<void> _submitData() async {
+    final url = Uri.parse('http://127.0.0.1:8001/contacts/addUrgentContact');
+
+    final data = {
+      'urgent_contact_name': _contactNameController.text,
+      'urgent_contact_desc': _contactDescController.text,
+      'urgent_contact_notelp': _contactPhoneController.text,
+    };
+
+    print('Sending data: $data'); // Debugging
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode(data),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      print(responseData);
+
+      setState(() {
+        _kontakList.add(data);
+        _contactNameController.clear();
+        _contactDescController.clear();
+        _contactPhoneController.clear();
+        _showForm = false;
+      });
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text("Sukses"),
+            content: Text("Kontak darurat berhasil ditambahkan."),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: Text("OK"),
+              ),
+            ],
+          );
+        },
+      );
+    } else {
+      print('Failed to create user: ${response.body}');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -101,9 +145,9 @@ class _KeluargaPageState extends State<KeluargaPage> {
                         ],
                         rows: _kontakList.map((kontak) {
                           return DataRow(cells: [
-                            DataCell(Text(kontak['nama']!)),
-                            DataCell(Text(kontak['keterangan']!)),
-                            DataCell(Text(kontak['telepon']!)),
+                            DataCell(Text(kontak['urgent_contact_name']!)),
+                            DataCell(Text(kontak['urgent_contact_desc']!)),
+                            DataCell(Text(kontak['urgent_contact_notelp']!)),
                           ]);
                         }).toList(),
                       ),
@@ -118,7 +162,7 @@ class _KeluargaPageState extends State<KeluargaPage> {
             onPressed: () {
               if (_kontakList.length < 4) {
                 setState(() {
-                  _showForm = true; // Menampilkan formulir ketika tombol ditekan
+                  _showForm = true;
                 });
               } else {
                 showDialog(
@@ -126,7 +170,8 @@ class _KeluargaPageState extends State<KeluargaPage> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text("Peringatan"),
-                      content: Text("Anda hanya dapat menambahkan maksimal 4 kontak darurat."),
+                      content: Text(
+                          "Anda hanya dapat menambahkan maksimal 4 kontak darurat."),
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -161,7 +206,7 @@ class _KeluargaPageState extends State<KeluargaPage> {
               child: Column(
                 children: [
                   TextFormField(
-                    controller: _namaController,
+                    controller: _contactNameController,
                     decoration: InputDecoration(
                       labelText: 'Nama Pasien',
                       errorText: _validateNama ? 'Nama harus diisi' : null,
@@ -174,12 +219,11 @@ class _KeluargaPageState extends State<KeluargaPage> {
                   ),
                   SizedBox(height: 10),
                   TextFormField(
-                    controller: _hubunganController,
+                    controller: _contactDescController,
                     decoration: InputDecoration(
                       labelText: 'Keterangan',
-                      errorText: _validateHubungan
-                          ? 'Keterangan harus diisi'
-                          : null,
+                      errorText:
+                          _validateHubungan ? 'Keterangan harus diisi' : null,
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -189,12 +233,11 @@ class _KeluargaPageState extends State<KeluargaPage> {
                   ),
                   SizedBox(height: 10),
                   TextFormField(
-                    controller: _teleponController,
+                    controller: _contactPhoneController,
                     decoration: InputDecoration(
                       labelText: 'Nomor Telepon',
-                      errorText: _validateTelepon
-                          ? 'Nomor telepon harus diisi'
-                          : null,
+                      errorText:
+                          _validateTelepon ? 'Nomor telepon harus diisi' : null,
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -206,47 +249,15 @@ class _KeluargaPageState extends State<KeluargaPage> {
                   ElevatedButton(
                     onPressed: () {
                       setState(() {
-                        // Validasi setiap field saat tombol simpan ditekan
-                        _validateNama = _namaController.text.isEmpty;
-                        _validateHubungan =
-                            _hubunganController.text.isEmpty;
-                        _validateTelepon = _teleponController.text.isEmpty;
+                        _validateNama = _contactNameController.text.isEmpty;
+                        _validateHubungan = _contactDescController.text.isEmpty;
+                        _validateTelepon = _contactPhoneController.text.isEmpty;
                       });
 
-                      // Jika tidak ada pesan error, tambahkan kontak ke daftar
                       if (!_validateNama &&
                           !_validateHubungan &&
                           !_validateTelepon) {
-                        _kontakList.add({
-                          'nama': _namaController.text,
-                          'keterangan': _hubunganController.text,
-                          'telepon': _teleponController.text,
-                        });
-
-                        // Tampilkan popup "Data berhasil ditambahkan"
-                        showDialog(
-                          context: context,
-                          builder: (BuildContext context) {
-                            return AlertDialog(
-                              title: Text("Sukses"),
-                              content:
-                                  Text("Kontak darurat berhasil ditambahkan."),
-                              actions: [
-                                TextButton(
-                                  onPressed: () {
-                                    Navigator.of(context).pop();
-                                  },
-                                  child: Text("OK"),
-                                ),
-                              ],
-                            );
-                          },
-                        );
-
-                        // Sembunyikan formulir setelah menambahkan kontak
-                        setState(() {
-                          _showForm = false;
-                        });
+                        _submitData();
                       }
                     },
                     style: ElevatedButton.styleFrom(

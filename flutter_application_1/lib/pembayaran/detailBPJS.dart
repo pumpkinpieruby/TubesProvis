@@ -1,4 +1,6 @@
+import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
 import 'package:tubes_5_wavecare/pembayaran/pembayaran.dart';
 
 void main() {
@@ -11,15 +13,50 @@ class detailBPJS extends StatefulWidget {
 }
 
 class _detailBPJSState extends State<detailBPJS> {
+  Map<String, dynamic>? bpjsDetail;
+  String token = ''; // Simpan token setelah login
+  int userId = 1; // Asumsikan kita memiliki user ID setelah login
+
+  @override
+  void initState() {
+    super.initState();
+    fetchBPJSDetail();
+  }
+
+  Future<void> fetchBPJSDetail() async {
+    final url =
+        Uri.parse('http://127.0.0.1:8001/pendaftaran/getBPJSDetail/$userId');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      setState(() {
+        bpjsDetail = json.decode(response.body);
+      });
+    } else {
+      print('Failed to fetch BPJS detail');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: BPJS(),
+      home: bpjsDetail != null
+          ? BPJS(bpjsDetail: bpjsDetail!)
+          : Scaffold(body: Center(child: CircularProgressIndicator())),
     );
   }
 }
 
 class BPJS extends StatelessWidget {
+  final Map<String, dynamic> bpjsDetail;
+
+  BPJS({required this.bpjsDetail});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -52,7 +89,7 @@ class BPJS extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             SizedBox(height: 20),
-            BillInformation(),
+            BillInformation(bpjsDetail: bpjsDetail),
             SizedBox(height: 60),
           ],
         ),
@@ -62,6 +99,10 @@ class BPJS extends StatelessWidget {
 }
 
 class BillInformation extends StatelessWidget {
+  final Map<String, dynamic> bpjsDetail;
+
+  BillInformation({required this.bpjsDetail});
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -85,27 +126,27 @@ class BillInformation extends StatelessWidget {
           ),
           SizedBox(height: 20),
           Text(
-            'Nomor BPJS : XXX-YYY-WWW',
+            'Nomor BPJS : ${bpjsDetail['bpjs_number']}',
             style: TextStyle(fontSize: 16),
           ),
           SizedBox(height: 8),
           Text(
-            'Nama Pasien : yyyy wwwww',
+            'Nama Pasien : ${bpjsDetail['nama_pasien']}',
             style: TextStyle(fontSize: 16),
           ),
           SizedBox(height: 8),
           Text(
-            'Nomor Rekam Medis : 1129 - 1121 - 01',
+            'Nomor Rekam Medis : ${bpjsDetail['nomor_rekam_medis']}',
             style: TextStyle(fontSize: 16),
           ),
           SizedBox(height: 8),
           Text(
-            'Tempat/Tanggal Lahir : xxx/01 Maret 2004',
+            'Tempat/Tanggal Lahir : ${bpjsDetail['tanggal_lahir']}',
             style: TextStyle(fontSize: 16),
           ),
           SizedBox(height: 8),
           Text(
-            'Tanggal Pembayaran : 29 Juni 2021',
+            'Tanggal Pembayaran : ${bpjsDetail['tanggal_pembayaran']}',
             style: TextStyle(fontSize: 16),
           ),
           SizedBox(height: 20),
@@ -141,7 +182,7 @@ class BillInformation extends StatelessWidget {
           ),
           SizedBox(height: 20),
           Row(
-            mainAxisAlignment: MainAxisAlignment.end, // Gambar diletakkan di sebelah kanan
+            mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Image.asset(
                 'assets/images/bpjs.png',

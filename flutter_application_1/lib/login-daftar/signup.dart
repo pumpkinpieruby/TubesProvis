@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:tubes_5_wavecare/login-daftar/login.dart';
-import 'package:tubes_5_wavecare/setpassword.dart';
 
 void main() {
   runApp(MyApp());
@@ -15,7 +16,65 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class SignUp extends StatelessWidget {
+class SignUp extends StatefulWidget {
+  @override
+  _SignUpState createState() => _SignUpState();
+}
+
+class _SignUpState extends State<SignUp> {
+  final TextEditingController _fullNameController = TextEditingController();
+  final TextEditingController _birthDateController = TextEditingController();
+  final TextEditingController _nikController = TextEditingController();
+  final TextEditingController _emailController = TextEditingController();
+  final TextEditingController _phoneController = TextEditingController();
+  final TextEditingController _bpjsController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
+
+  Future<void> _submitData() async {
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Password dan konfirmasi password tidak cocok.')),
+      );
+      return;
+    }
+
+    final url = Uri.parse('http://127.0.0.1:8001/user/register/');
+
+    final response = await http.post(
+      url,
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: json.encode({
+        'user_nama': _fullNameController.text,
+        'user_email': _emailController.text,
+        'user_no_telp': _phoneController.text,
+        'user_password': _passwordController.text,
+        'user_nik': _nikController.text,
+        'user_tanggal_lahir': _birthDateController.text,
+        'user_bpjs': _bpjsController.text,
+      }),
+    );
+
+    if (response.statusCode == 200) {
+      final responseData = json.decode(response.body);
+      print(responseData);
+      // Navigate to the next screen
+      Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => LoginPage()),
+      );
+    } else {
+      print('Failed to create user');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to register. Please try again.')),
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,9 +86,9 @@ class SignUp extends StatelessWidget {
           icon: Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => LoginPage()),
-        );
+              context,
+              MaterialPageRoute(builder: (context) => LoginPage()),
+            );
           },
         ),
         title: Text(
@@ -67,6 +126,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+                  controller: _fullNameController,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Nama Lengkap',
@@ -80,7 +140,7 @@ class SignUp extends StatelessWidget {
               ),
               SizedBox(height: 10),
               Text(
-                'Tanggal Lahir' ,
+                'Tanggal Lahir',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 14,
@@ -96,6 +156,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextFormField(
+                  controller: _birthDateController,
                   obscureText: false,
                   keyboardType: TextInputType.datetime,
                   decoration: InputDecoration(
@@ -126,6 +187,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+                  controller: _nikController,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Nomor Induk Kependudukan',
@@ -155,6 +217,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+                  controller: _emailController,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Email',
@@ -184,6 +247,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+                  controller: _phoneController,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Nomor Telepon',
@@ -213,6 +277,7 @@ class SignUp extends StatelessWidget {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
+                  controller: _bpjsController,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Nomor BPJS',
@@ -224,15 +289,70 @@ class SignUp extends StatelessWidget {
                   ),
                 ),
               ),
+              SizedBox(height: 10),
+              Text(
+                'Kata Sandi',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 8),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: TextField(
+                  controller: _passwordController,
+                  obscureText: true, // Menyembunyikan input
+                  decoration: InputDecoration(
+                    hintText: 'Masukkan Kata Sandi',
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(133, 133, 133, 100),
+                    ),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
+              SizedBox(height: 10),
+              Text(
+                'Konfirmasi Kata Sandi',
+                style: TextStyle(
+                  fontFamily: 'Poppins',
+                  fontSize: 14,
+                  fontWeight: FontWeight.bold,
+                  color: Colors.black,
+                ),
+              ),
+              SizedBox(height: 8),
+              Container(
+                padding: EdgeInsets.symmetric(horizontal: 10),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(color: Colors.grey),
+                ),
+                child: TextField(
+                  controller: _confirmPasswordController,
+                  obscureText: true, // Menyembunyikan input
+                  decoration: InputDecoration(
+                    hintText: 'Masukkan Kembali Kata Sandi',
+                    hintStyle: TextStyle(
+                      fontWeight: FontWeight.bold,
+                      color: Color.fromARGB(133, 133, 133, 100),
+                    ),
+                    border: InputBorder.none,
+                  ),
+                ),
+              ),
               SizedBox(height: 32),
               Center(
                 child: ElevatedButton(
-                  onPressed: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(builder: (context) => Aturpassword()),
-                    );
-                  },
+                  onPressed: _submitData,
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Color(0xFF00A9FF),
                     shape: RoundedRectangleBorder(
@@ -243,7 +363,7 @@ class SignUp extends StatelessWidget {
                     width: 220, // Atur lebar tombol
                     child: Center(
                       child: Text(
-                        'Selanjutnya',
+                        'Buat Akun',
                         style: TextStyle(
                           fontFamily: 'Poppins',
                           fontSize: 16,

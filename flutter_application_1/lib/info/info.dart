@@ -124,7 +124,7 @@ class HealthInfoPage extends StatelessWidget {
   }) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, '/isiartikel');
+        Navigator.pushNamed(context, '/infokesehatan');
       },
       child: 
     Container(

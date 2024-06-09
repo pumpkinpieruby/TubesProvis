@@ -34,7 +34,9 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
             // Navigasi langsung ke halaman homepage saat tombol kembali ditekan
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => homepage()), // Ganti dengan halaman homepage
+              MaterialPageRoute(
+                  builder: (context) =>
+                      homepage()), // Ganti dengan halaman homepage
             );
           },
         ),
@@ -79,12 +81,16 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
         if (title == 'Jadwalkan Pendaftaran') {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => ketersediaandokter()), // Halaman Laboratorium
+            MaterialPageRoute(
+                builder: (context) =>
+                    ketersediaandokter()), // Halaman Laboratorium
           );
         } else if (title == 'Riwayat Pendaftaran') {
           Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => riwayatpendaftaran()), // Halaman Radiologi
+            MaterialPageRoute(
+                builder: (context) =>
+                    RegistrationHistoryPage()), // Halaman Radiologi
           );
         }
       },
@@ -125,12 +131,16 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
                 if (title == 'Jadwalkan Pendaftaran') {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => ketersediaandokter()), // Halaman Laboratorium
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            ketersediaandokter()), // Halaman Laboratorium
                   );
                 } else if (title == 'Riwayat Pendaftaran') {
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => riwayatpendaftaran()), // Halaman Radiologi
+                    MaterialPageRoute(
+                        builder: (context) =>
+                            RegistrationHistoryPage()), // Halaman Radiologi
                   );
                 }
               },
