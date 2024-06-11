@@ -33,7 +33,7 @@ class _KeluargaState extends State<KeluargaPage> {
   bool _validateTelepon = false;
 
   Future<void> _submitData() async {
-    final url = Uri.parse('http://127.0.0.1:8000/contacts/addUrgentContact');
+    final url = Uri.parse('http://127.0.0.1:8001/contacts/addUrgentContact');
 
     final data = {
       'urgent_contact_name': _contactNameController.text,
@@ -170,7 +170,8 @@ class _KeluargaState extends State<KeluargaPage> {
                   builder: (BuildContext context) {
                     return AlertDialog(
                       title: Text("Peringatan"),
-                      content: Text("Anda hanya dapat menambahkan maksimal 4 kontak darurat."),
+                      content: Text(
+                          "Anda hanya dapat menambahkan maksimal 4 kontak darurat."),
                       actions: [
                         TextButton(
                           onPressed: () {
@@ -221,7 +222,8 @@ class _KeluargaState extends State<KeluargaPage> {
                     controller: _contactDescController,
                     decoration: InputDecoration(
                       labelText: 'Keterangan',
-                      errorText: _validateHubungan ? 'Keterangan harus diisi' : null,
+                      errorText:
+                          _validateHubungan ? 'Keterangan harus diisi' : null,
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -234,7 +236,8 @@ class _KeluargaState extends State<KeluargaPage> {
                     controller: _contactPhoneController,
                     decoration: InputDecoration(
                       labelText: 'Nomor Telepon',
-                      errorText: _validateTelepon ? 'Nomor telepon harus diisi' : null,
+                      errorText:
+                          _validateTelepon ? 'Nomor telepon harus diisi' : null,
                     ),
                     onChanged: (value) {
                       setState(() {
@@ -251,7 +254,9 @@ class _KeluargaState extends State<KeluargaPage> {
                         _validateTelepon = _contactPhoneController.text.isEmpty;
                       });
 
-                      if (!_validateNama && !_validateHubungan && !_validateTelepon) {
+                      if (!_validateNama &&
+                          !_validateHubungan &&
+                          !_validateTelepon) {
                         _submitData();
                       }
                     },

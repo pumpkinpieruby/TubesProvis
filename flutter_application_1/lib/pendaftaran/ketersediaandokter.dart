@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 import 'package:tubes_5_wavecare/pendaftaran/pendaftaran.dart';
 import 'package:tubes_5_wavecare/pendaftaran/pendaftaran2.dart';
 
@@ -21,41 +23,47 @@ class HealthInfoPage extends StatefulWidget {
 }
 
 class _HealthInfoPageState extends State<HealthInfoPage> {
-  // Map untuk menampung konten untuk setiap poli
-  Map<String, List<String>> poliContent = {
-    'Poli Umum': ['Dr. Dian Ismaya', 'Dr. Dino Halim', 'Dr. Landry Miguna'],
-    'Poli Saraf': ['Dr. Ada Wong', 'Dr. Ahmad Ibrahim'],
-    'Poli Anak': ['Dr. Natasha', 'Dr. Bai Lu'],
-    'Poli THT': ['Dr. Amanda Tan', 'Dr. Caroline Wong'],
-    'Poli Penyakit Dalam': ['Dr. Farah Rahman', 'Dr. Linda Patel'],
-    'Poli Mata': ['Dr. Michael Nguyen', 'Dr. Tina Chen'],
-    'Poli Gigi': ['Dr. Xander Liu', 'Dr. Bella Wang', 'Dr. Yuki Tanaka'],
-    'Poli Jantung': ['Dr. Leon Kenedy', 'Dr. Cocolia'],
-    'Poli Kulit': ['Dr. Priya Sharma', 'Dr. Valerie Johnson'],
-    'Poli Tulang': ['Dr. Ayumi Nishimura'],
-    'Poli Bedah': ['Dr. Aiko Tanaka', 'Dr. Daichi Suzuki', 'Dr. Renjiro Sato', 'Dr. Yukihiro Mori'],
-    'Poli Kandungan': ['Dr. Kenjiro Ono', 'Dr. Mai Nakamura'],
-    'Poli Psikiatri': ['Dr. Noboru Yamaguchi', 'Dr. Riko Saito', 'Dr. Kai Ito'],
-  };
-
-  // Map untuk menampung status kotak poli yang terbuka
-  Map<String, bool> expandedPoli = {
-    'Poli Umum': false,
-    'Poli Saraf': false,
-    'Poli Anak': false,
-    'Poli THT': false,
-    'Poli Penyakit Dalam': false,
-    'Poli Mata': false,
-    'Poli Gigi': false,
-    'Poli Jantung': false,
-    'Poli Tulang': false,
-    'Poli Bedah': false,
-    'Poli Kandungan': false,
-    'Poli Kulit': false,
-    'Poli Psikiatri': false,
-  };
-
+  Map<String, List<Map<String, dynamic>>> poliContent =
+      {}; // Map untuk menyimpan konten poli
+  Map<String, bool> expandedPoli =
+      {}; // Map untuk menyimpan status kotak poli yang terbuka
   String searchQuery = ''; // State untuk menyimpan kata kunci pencarian
+  String token = ''; // Simpan token setelah login
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDoctors(); // Panggil fungsi fetchDoctors untuk mengambil data dokter
+  }
+
+  // Fungsi untuk mengambil data dokter dari API
+  Future<void> fetchDoctors() async {
+    final url = Uri.parse('http://127.0.0.1:8001/dokter/getAllDoctors');
+    final response = await http.get(
+      url,
+      headers: {
+        'Authorization': 'Bearer $token',
+      },
+    );
+
+    if (response.statusCode == 200) {
+      final List<dynamic> data = json.decode(response.body);
+      setState(() {
+        // Proses data dokter dan simpan dalam poliContent dan expandedPoli
+        data.forEach((doctor) {
+          final poliName = doctor[
+              'doctor_poli']; // Gantilah 'poli' dengan nama field yang sesuai dari API kamu
+          if (!poliContent.containsKey(poliName)) {
+            poliContent[poliName] = [];
+            expandedPoli[poliName] = false;
+          }
+          poliContent[poliName]!.add(doctor);
+        });
+      });
+    } else {
+      print('Failed to fetch doctors');
+    }
+  }
 
   // Method untuk memperbarui kata kunci pencarian
   void updateSearchQuery(String query) {
@@ -73,7 +81,9 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
           onPressed: () {
             Navigator.pushReplacement(
               context,
-              MaterialPageRoute(builder: (context) => pendaftaran()), // Ganti dengan halaman homepage
+              MaterialPageRoute(
+                  builder: (context) =>
+                      pendaftaran()), // Ganti dengan halaman homepage
             );
           },
         ),
@@ -95,7 +105,8 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
               padding: const EdgeInsets.symmetric(horizontal: 16.0),
               child: TextField(
                 onChanged: (value) {
-                  updateSearchQuery(value); // Memperbarui pencarian saat teks berubah
+                  updateSearchQuery(
+                      value); // Memperbarui pencarian saat teks berubah
                 },
                 decoration: InputDecoration(
                   hintText: 'Cari Poli',
@@ -110,7 +121,8 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
                 ),
               ),
             ),
-            SizedBox(height: 16.0), // Spasi antara search bar dan kotak-kotak poli
+            SizedBox(
+                height: 16.0), // Spasi antara search bar dan kotak-kotak poli
 
             // ListView untuk menampilkan kotak-kotak poli berdasarkan hasil pencarian
             Expanded(
@@ -118,7 +130,8 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
                 itemCount: poliContent.length,
                 itemBuilder: (context, index) {
                   String poliName = poliContent.keys.elementAt(index);
-                  List<String> content = poliContent[poliName] ?? [];
+                  List<Map<String, dynamic>> content =
+                      poliContent[poliName] ?? [];
 
                   // Filter berdasarkan kata kunci pencarian pada nama poli saja
                   if (poliName.toLowerCase().contains(searchQuery)) {
@@ -140,7 +153,8 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
                                 borderRadius: BorderRadius.circular(15.0),
                               ),
                               child: Row(
-                                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     poliName,
@@ -150,7 +164,9 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
                                     ),
                                   ),
                                   Icon(
-                                    expandedPoli[poliName] ?? false ? Icons.expand_less : Icons.expand_more,
+                                    expandedPoli[poliName] ?? false
+                                        ? Icons.expand_less
+                                        : Icons.expand_more,
                                   ),
                                 ],
                               ),
@@ -160,9 +176,12 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
                           if (expandedPoli[poliName]!)
                             Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
-                              children: content.map((item) {
+                              children: content.map((doctor) {
                                 return _buildSubBoxes(
-                                    item, poliName, MediaQuery.of(context).size.width);
+                                  doctor, // Gantilah 'name' dengan nama field yang sesuai dari API kamu
+                                  poliName,
+                                  MediaQuery.of(context).size.width,
+                                );
                               }).toList(),
                             ),
                         ],
@@ -182,13 +201,18 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
   }
 
   // Method untuk membangun kotak-kotak di bawah kotak poli utama
-  Widget _buildSubBoxes(String text, String poliName, double width) {
+  Widget _buildSubBoxes(doctor, String poliName, double width) {
     return GestureDetector(
       onTap: () {
-        // Navigasi ke homepage ketika kotak dokter di-klik
+        // Navigasi ke halaman pendaftaran ketika kotak dokter di-klik
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => Pendaftaran2()), 
+          MaterialPageRoute(
+            builder: (context) => Pendaftaran2(
+              doctorId: doctor['id_doctor'],
+              doctorName: doctor['doctor_name'],
+            ),
+          ),
         );
       },
       child: Padding(
@@ -205,7 +229,7 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
             children: [
               Expanded(
                 child: Text(
-                  text,
+                  doctor['doctor_name'],
                   style: TextStyle(
                     fontSize: 16.0,
                     fontWeight: FontWeight.normal,

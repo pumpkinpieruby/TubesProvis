@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart'; // Import SharedPreferences
 import 'package:tubes_5_wavecare/forget.dart';
 import 'package:tubes_5_wavecare/homepage.dart';
 import 'package:tubes_5_wavecare/login-daftar/signup.dart';
@@ -26,74 +27,77 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
+  bool _passwordVisible = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _checkLoginStatus();
+  }
+
+  Future<void> _checkLoginStatus() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    bool isLoggedIn = prefs.getBool('isLoggedIn') ?? false;
+    if (isLoggedIn) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => homepage()),
+      );
+    }
+  }
 
   Future<void> _loginWithApi() async {
-  final email = _emailController.text;
-  final password = _passwordController.text;
-  final Uri url = Uri.parse('http://127.0.0.1:8000/login/$email/$password');
-  final response = await http.get(url);
-
-  if (response.statusCode == 200) {
-    // Login successful
-    Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => homepage()),
-    );
-  } else {
-    // Login failed
-    showDialog(
-      context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Login Failed'),
-        content: Text('Please check your email and password.'),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: Text('OK'),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-  Future<void> _registerWithApi() async {
     final email = _emailController.text;
     final password = _passwordController.text;
-    final Uri url = Uri.parse('http://127.0.0.1:8000/register');
+    final Uri url = Uri.parse('http://127.0.0.1:8001/user/token');
+
     final response = await http.post(
       url,
-      headers: <String, String>{
-        'Content-Type': 'application/json; charset=UTF-8',
+      headers: {
+        'Content-Type': 'application/x-www-form-urlencoded',
       },
-      body: jsonEncode(<String, String>{
-        'email': email,
+      body: {
+        'username': email,
         'password': password,
-      }),
+      },
     );
 
     if (response.statusCode == 200) {
-      // Registration successful
-      showDialog(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: Text('Registration Successful'),
-          content: Text('Your account has been created.'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.pop(context),
-              child: Text('OK'),
-            ),
-          ],
-        ),
+      final responseData = json.decode(response.body);
+      final String token = responseData['access_token'];
+      final String userId = responseData['user_id'];
+
+      final userInfoResponse = await http.get(
+        Uri.parse('http://127.0.0.1:8001/user/getUserInfo'),
+        headers: {
+          'Authorization': 'Bearer $token',
+        },
       );
+
+      if (userInfoResponse.statusCode == 200) {
+        final userInfo = json.decode(userInfoResponse.body);
+
+        // Simpan status login menggunakan SharedPreferences
+        SharedPreferences prefs = await SharedPreferences.getInstance();
+        await prefs.setBool('isLoggedIn', true);
+        await prefs.setString('token', token);
+        await prefs.setString('userId', userId);
+
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (context) => homepage()),
+        );
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('Failed to retrieve user info.')),
+        );
+      }
     } else {
-      // Registration failed
       showDialog(
         context: context,
         builder: (context) => AlertDialog(
-          title: Text('Registration Failed'),
-          content: Text('Please try again.'),
+          title: Text('Login Failed'),
+          content: Text('Please check your email and password.'),
           actions: [
             TextButton(
               onPressed: () => Navigator.pop(context),
@@ -103,7 +107,7 @@ class _LoginPageState extends State<LoginPage> {
         ),
       );
     }
-  } 
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -193,7 +197,7 @@ class _LoginPageState extends State<LoginPage> {
               ),
               child: TextField(
                 controller: _passwordController,
-                obscureText: true,
+                obscureText: !_passwordVisible,
                 decoration: InputDecoration(
                   hintText: 'Masukkan Kata Sandi',
                   hintStyle: TextStyle(
@@ -201,9 +205,18 @@ class _LoginPageState extends State<LoginPage> {
                     color: Color.fromARGB(133, 133, 133, 100),
                   ),
                   border: InputBorder.none,
-                  suffixIcon: Icon(
-                    Icons.visibility_off,
-                    color: Color(0xFF00A9FF),
+                  suffixIcon: IconButton(
+                    icon: Icon(
+                      _passwordVisible
+                          ? Icons.visibility
+                          : Icons.visibility_off,
+                      color: Color(0xFF00A9FF),
+                    ),
+                    onPressed: () {
+                      setState(() {
+                        _passwordVisible = !_passwordVisible;
+                      });
+                    },
                   ),
                 ),
               ),

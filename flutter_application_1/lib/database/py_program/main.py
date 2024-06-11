@@ -10,6 +10,17 @@ import dokter
 import transaksi
 import riwayat_pendidikan
 import jadwal_dokter
+import faq
+import riwayat_praktik_dokter
+from fastapi.middleware.cors import CORSMiddleware
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
 @app.get("/")
 def read_root():
@@ -36,7 +47,11 @@ app.include_router(transaksi.router, prefix="/transaksi", tags=["transaksi"])
 
 app.include_router(riwayat_pendidikan.router, prefix="/riwayat_pendidikan", tags=["riwayat_pendidikan"])
 
+app.include_router(riwayat_praktik_dokter.router, prefix="/riwayat_praktik_dokter", tags=["riwayat_praktik"])
+
 app.include_router(jadwal_dokter.router, prefix="/jadwal_dokter", tags=["jadwal_dokter"])
+
+app.include_router(faq.router, prefix="/faq", tags=["faq"])
 
 
 

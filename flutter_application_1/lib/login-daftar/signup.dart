@@ -2,7 +2,6 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:tubes_5_wavecare/login-daftar/login.dart';
-//  import 'package:tubes_5_wavecare/setpassword.dart';
 
 void main() {
   runApp(MyApp());
@@ -30,9 +29,19 @@ class _SignUpState extends State<SignUp> {
   final TextEditingController _phoneController = TextEditingController();
   final TextEditingController _bpjsController = TextEditingController();
   final TextEditingController _passwordController = TextEditingController();
+  final TextEditingController _confirmPasswordController =
+      TextEditingController();
 
   Future<void> _submitData() async {
-    final url = Uri.parse('http://127.0.0.1:8000/user/register/');
+    if (_passwordController.text != _confirmPasswordController.text) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+            content: Text('Password dan konfirmasi password tidak cocok.')),
+      );
+      return;
+    }
+
+    final url = Uri.parse('http://127.0.0.1:8001/user/register/');
 
     final response = await http.post(
       url,
@@ -56,10 +65,13 @@ class _SignUpState extends State<SignUp> {
       // Navigate to the next screen
       Navigator.push(
         context,
-        MaterialPageRoute(builder: (context) => Login()),
+        MaterialPageRoute(builder: (context) => LoginPage()),
       );
     } else {
       print('Failed to create user');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to register. Please try again.')),
+      );
     }
   }
 
@@ -128,7 +140,7 @@ class _SignUpState extends State<SignUp> {
               ),
               SizedBox(height: 10),
               Text(
-                'Tanggal Lahir' ,
+                'Tanggal Lahir',
                 style: TextStyle(
                   fontFamily: 'Poppins',
                   fontSize: 14,
@@ -265,7 +277,7 @@ class _SignUpState extends State<SignUp> {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
-                   controller: _bpjsController,
+                  controller: _bpjsController,
                   obscureText: false,
                   decoration: InputDecoration(
                     hintText: 'Masukkan Nomor BPJS',
@@ -325,7 +337,7 @@ class _SignUpState extends State<SignUp> {
                   border: Border.all(color: Colors.grey),
                 ),
                 child: TextField(
-                  controller: _passwordController,
+                  controller: _confirmPasswordController,
                   obscureText: true, // Menyembunyikan input
                   decoration: InputDecoration(
                     hintText: 'Masukkan Kembali Kata Sandi',
@@ -337,7 +349,7 @@ class _SignUpState extends State<SignUp> {
                   ),
                 ),
               ),
-                SizedBox(height: 32),
+              SizedBox(height: 32),
               Center(
                 child: ElevatedButton(
                   onPressed: _submitData,
