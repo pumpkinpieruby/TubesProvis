@@ -262,7 +262,7 @@ class _MyHomePageState extends State<MyHomePage> {
   Widget _buildFaqItem(String question) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, "/isidetailfaqnyadisini");
+        Navigator.pushNamed(context, "/detailFAQ");
       },
       child: Container(
         height: 60,
@@ -279,7 +279,7 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               child: InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, "/isidetailfaqnyadisini");
+                  Navigator.pushNamed(context, "/detailFAQ");
                 },
                 child: Text(
                   question,
@@ -293,7 +293,7 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, "/isidetailfaqnyadisini");
+                Navigator.pushNamed(context, "/detailFAQ");
               },
               child: Icon(Icons.navigate_next, color: Colors.black), // Icon "> "
             ),
