@@ -21,7 +21,7 @@ class Faq extends StatelessWidget {
         useMaterial3: true,
       ),
       routes: {
-        "/isidetailfaqnyadisini": (context) => detailFAQ(),
+        "/detailFAQ": (context) => DetailFAQ(),
       },
       home: const MyHomePage(title: 'FAQ'),
     );

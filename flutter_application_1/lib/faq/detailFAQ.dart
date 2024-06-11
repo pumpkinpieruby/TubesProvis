@@ -1,46 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_5_wavecare/faq/FAQ.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 void main() {
-  runApp(const detailFAQ());
+  runApp(const DetailFAQ());
 }
 
-class detailFAQ extends StatelessWidget {
-  const detailFAQ({Key? key});
-
+class DetailFAQ extends StatelessWidget {
+  const DetailFAQ({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'Flutter Demo',
       theme: ThemeData(
-
         colorScheme: ColorScheme.fromSeed(seedColor: const Color.fromARGB(255, 255, 255, 255)),
         useMaterial3: true,
       ),
       routes: {
         "/kembali": (context) => Faq(),
       },
-      home: const MyHomePage(title: 'Bagaimana Cara Mengubah Kata Sandi'),
+      home: const MyHomePage(idFaq: 1),
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({Key? key, required this.title});
+  final int idFaq;
 
-
-  final String title;
+  const MyHomePage({required this.idFaq, Key? key}) : super(key: key);
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
 }
 
 class _MyHomePageState extends State<MyHomePage> {
+  Map<String, dynamic>? faqDetail;
+
+  @override
+  void initState() {
+    super.initState();
+    fetchFAQDetail(widget.idFaq);
+  }
+
+  Future<void> fetchFAQDetail(int idFaq) async {
+    final url = Uri.parse('http://127.0.0.1:8001/faq/getFAQ/$idFaq');
+    final response = await http.get(url);
+
+    if (response.statusCode == 200) {
+      setState(() {
+        faqDetail = json.decode(response.body);
+      });
+    } else {
+      print('Failed to fetch FAQ detail');
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-   
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.white,
@@ -50,70 +68,45 @@ class _MyHomePageState extends State<MyHomePage> {
               onTap: () {
                 Navigator.pushNamed(context, "/kembali");
               },
-              child: SizedBox(
-                height: 30,
-                width: 30,
-                child: Icon(Icons.arrow_back, color: Colors.black),
-              ),
+              child: const Icon(Icons.arrow_back, color: Colors.black),
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
           ],
         ),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            Text(
-              widget.title,
-              style: TextStyle(
-                color: Colors.blue,
-                fontWeight: FontWeight.bold,
-                fontSize: 20,
-                fontFamily: 'Poppins',
-              ),
-            ),
-            SizedBox(height: 20),
-            Container(
-              width: 350,
-              height: 500,
-              padding: EdgeInsets.all(20),
-              decoration: BoxDecoration(
-                color: const Color.fromARGB(255, 174, 216, 251),
-                borderRadius: BorderRadius.circular(20),
-                border: Border.all(color: Colors.grey, width: 2)
-              ),
+      body: faqDetail == null
+          ? const Center(child: CircularProgressIndicator())
+          : Padding(
+              padding: const EdgeInsets.all(16.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  SizedBox(height: 10),
-                  Text('1. Cari menu atau opsi pengaturan akun.',
-                  style: TextStyle(fontSize: 16, fontFamily: 'Poppins'),
+                  const SizedBox(height: 20),
+                  Text(
+                    faqDetail!['judul_faq'],
+                    style: const TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Poppins',
+                    ),
                   ),
-                  Text('2. Masuk ke pengaturan akun.',
-                  style: TextStyle(fontSize: 16, fontFamily: 'Poppins'),
-                  ),
-                  Text('3. Pilih keamanan atau privasi.',
-                  style: TextStyle(fontSize: 16, fontFamily: 'Poppins'),
-                  ),
-                  Text('4. Ganti kata sandi.',
-                  style: TextStyle(fontSize: 16, fontFamily: 'Poppins'),
-                  ),
-                  Text('5. Verifikasi identitas.',
-                  style: TextStyle(fontSize: 16, fontFamily: 'Poppins'),
-                  ),
-                  Text('6. Ikuti petunjuk yang disediakan.',
-                  style: TextStyle(fontSize: 16, fontFamily: 'Poppins'),
-                  ),
-                  Text('7. Simpan perubahan.',
-                  style: TextStyle(fontSize: 16, fontFamily: 'Poppins'),
+                  const SizedBox(height: 20),
+                  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.all(20),
+                    decoration: BoxDecoration(
+                      color: const Color.fromARGB(255, 174, 216, 251),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: Colors.grey, width: 2),
+                    ),
+                    child: Text(
+                      faqDetail!['deskripsi_faq'],
+                      style: const TextStyle(fontSize: 16, fontFamily: 'Poppins'),
+                    ),
                   ),
                 ],
               ),
-            )
-          ],
-        ),
-      ),
+            ),
     );
   }
 }
