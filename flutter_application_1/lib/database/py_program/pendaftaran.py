@@ -1,4 +1,4 @@
-from fastapi import APIRouter, HTTPException, Depends, status
+from fastapi import APIRouter, HTTPException, Depends, Path, status
 from pydantic import BaseModel
 from typing import List, Optional
 import sqlite3
@@ -97,7 +97,7 @@ def get_pendaftaran(id_pendaftaran: int):
     raise HTTPException(status_code=404, detail="Pendaftaran not found")
 
 @router.get("/getPendaftaran/{user_id}", response_model=List[Pendaftaran], status_code=status.HTTP_200_OK)
-def get_pendaftaran(user_id: int):
+def get_pendaftaran(user_id: int = Path(..., title="The ID of the user")):
     conn = sqlite3.connect("carewave.db")
     cursor = conn.cursor()
     cursor.execute("SELECT * FROM pendaftaran WHERE user_id = ?", (user_id,))
@@ -252,3 +252,13 @@ def get_bpjs_detail(user_id: int):
             "tanggal_pembayaran": bpjs_detail[4]
         }
     raise HTTPException(status_code=404, detail="BPJS detail not found")
+
+# Menghapus pendaftaran
+@router.delete("/{id_pendaftaran}", status_code=status.HTTP_200_OK)
+def delete_pendaftaran(id_pendaftaran: int = Path(..., title="The ID of the pendafatran to delete", ge=1)):
+    conn = sqlite3.connect("carewave.db")
+    cursor = conn.cursor()
+    cursor.execute("DELETE FROM Pendaftaran WHERE id_pendaftaran = ?", (id_pendaftaran,))
+    conn.commit()
+    conn.close()
+    return {"message": "pendaftaran deleted successfully"}

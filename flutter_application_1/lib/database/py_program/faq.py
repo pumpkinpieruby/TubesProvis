@@ -10,27 +10,6 @@ class FAQ(BaseModel):
     judul_faq: str
     deskripsi_faq: str
 
-# # Init db for FAQ
-# @router.get("/init/", status_code=status.HTTP_201_CREATED)
-# def init_db():
-#     try:
-#         conn = sqlite3.connect("carewave.db")
-#         cursor = conn.cursor()
-#         cursor.execute("DROP TABLE IF EXISTS Faq")  # Drop the existing table if it exists
-#         cursor.execute(
-#             """CREATE TABLE IF NOT EXISTS Faq(
-#                 id_faq INTEGER PRIMARY KEY AUTOINCREMENT,
-#                 judul_faq TEXT NOT NULL,
-#                 deskripsi_faq TEXT NOT NULL
-#             )"""
-#         )
-#         conn.commit()
-#     except Exception as e:
-#         return {"status": f"Error saat membuat tabel: {e}"}
-#     finally:
-#         conn.close()
-#     return {"status": "Berhasil membuat tabel FAQ"}
-
 @router.post("/", status_code=status.HTTP_201_CREATED)
 def add_faq(faq: FAQ):
     conn = sqlite3.connect("carewave.db")

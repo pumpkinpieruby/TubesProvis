@@ -97,7 +97,7 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
           context,
           MaterialPageRoute(
               builder: (context) => Pendaftaran3(
-                    idPendaftaran: 1,
+                    idPendaftaran: 2,
                   )),
         );
       } else {

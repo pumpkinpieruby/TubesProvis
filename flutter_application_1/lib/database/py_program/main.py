@@ -10,8 +10,9 @@ import dokter
 import transaksi
 import riwayat_pendidikan
 import jadwal_dokter
-import faq
 import riwayat_praktik_dokter
+import antrean
+import faq
 from fastapi.middleware.cors import CORSMiddleware
 
 app.add_middleware(
@@ -53,5 +54,5 @@ app.include_router(jadwal_dokter.router, prefix="/jadwal_dokter", tags=["jadwal_
 
 app.include_router(faq.router, prefix="/faq", tags=["faq"])
 
-
+app.include_router(antrean.router, prefix="/antrean", tags=["antrean"])
 

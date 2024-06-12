@@ -6,7 +6,8 @@ router = APIRouter()
 
 # Pydantic model for laboratory check data
 class CheckLab(BaseModel):
-    user_id: str
+    Ceklab_id: int
+    user_id: int
     jenis_ceklab: str
     foto: str  # Mengubah tipe data foto menjadi string biasa
     tanggal: str
@@ -22,10 +23,11 @@ def init_db():
         cursor.execute(
             """CREATE TABLE IF NOT EXISTS ceklab(
                 Ceklab_id INTEGER PRIMARY KEY AUTOINCREMENT,
-                user_id TEXT NOT NULL,
+                user_id INTEGER NOT NULL,
                 jenis_ceklab TEXT NOT NULL,
                 foto TEXT NOT NULL,
                 tanggal TEXT NOT NULL
+                FOREIGN KEY (user_id) REFERENCES User (user_id)
             )"""
         )
         conn.commit()
@@ -77,10 +79,11 @@ def getchecklab():
         if records:
             return [
                 {
-                    "user_id": record[0],
-                    "jenis_ceklab": record[1],
-                    "foto": record[2],
-                    "tanggal": record[3],
+                    "Ceklab_id": record[0],
+                    "user_id": record[1],
+                    "jenis_ceklab": record[2],
+                    "foto": record[3],
+                    "tanggal": record[4],
                 }
                 for record in records
             ]

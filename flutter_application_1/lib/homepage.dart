@@ -53,7 +53,7 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => kartu()),
+          MaterialPageRoute(builder: (context) => Kartu()),
         );
         break;
       case 3:
@@ -139,7 +139,7 @@ class _HealthInfoPageState extends State<HealthInfoPage> {
                   onPressed: () {
                     Navigator.push(
                       context,
-                      MaterialPageRoute(builder: (context) => notif()),
+                      MaterialPageRoute(builder: (context) => Notifikasi()),
                     );
                   },
                 ),

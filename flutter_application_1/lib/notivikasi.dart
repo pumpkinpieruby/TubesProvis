@@ -2,46 +2,42 @@ import 'package:flutter/material.dart';
 import 'homepage.dart';
 
 void main() {
-  runApp(notif());
+  runApp(NotifikasiApp());
 }
 
-class notif extends StatelessWidget {
+class NotifikasiApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      home: Notifikasi(),
+      home: Notifikasi(), 
     );
   }
 }
 
 class Notifikasi extends StatefulWidget {
+  final int? nomorAntrean;
+
+  Notifikasi({this.nomorAntrean}); // Menerima parameter nomorAntrean
+
   @override
   _NotifikasiState createState() => _NotifikasiState();
 }
 
 class _NotifikasiState extends State<Notifikasi> {
-  List<Widget> notifikasiList = [
-    NotifikasiContainer(
-      judul: 'Notifikasi 1',
-      isi: 'Isi notifikasi 1',
-    ),
-    NotifikasiContainer(
-      judul: 'Notifikasi 2',
-      isi: 'Isi notifikasi 2',
-    ),
-    NotifikasiContainer(
-      judul: 'Notifikasi 3',
-      isi: 'Isi notifikasi 3',
-    ),
-    NotifikasiContainer(
-      judul: 'Notifikasi 4',
-      isi: 'Isi notifikasi 4',
-    ),
-    NotifikasiContainer(
-      judul: 'Notifikasi 5',
-      isi: 'Isi notifikasi 5',
-    ),
-  ];
+  List<Widget> notifikasiList = [];
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.nomorAntrean != null) {
+      notifikasiList.add(
+        NotifikasiContainer(
+          judul: 'Antrean Terkini',
+          isi: 'Nomor Antrean Anda: ${widget.nomorAntrean}',
+        ),
+      );
+    }
+  }
 
   void hapusNotifikasi() {
     setState(() {
@@ -60,10 +56,10 @@ class _NotifikasiState extends State<Notifikasi> {
           color: Colors.black,
           onPressed: () {
             Navigator.push(
-            context,
-            MaterialPageRoute(builder: (context) => homepage()),
-          );
-        },
+              context,
+              MaterialPageRoute(builder: (context) => homepage()),
+            );
+          },
         ),
         title: Text(
           'Notifikasi',
@@ -77,7 +73,7 @@ class _NotifikasiState extends State<Notifikasi> {
         centerTitle: true,
       ),
       body: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 30.0), // Padding untuk halaman
+        padding: EdgeInsets.symmetric(horizontal: 30.0), 
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.stretch,
           children: [
@@ -87,12 +83,12 @@ class _NotifikasiState extends State<Notifikasi> {
                 alignment: Alignment.centerRight,
                 child: ElevatedButton.icon(
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.transparent, // Set the button background color to transparent
-                    elevation: 0, // Remove button shadow
+                    backgroundColor: Colors.transparent, 
+                    elevation: 0, 
                   ),
                   onPressed: hapusNotifikasi,
-                  icon: Icon(Icons.delete, color: Colors.black), // Set icon color to black
-                  label: Text('Hapus Semua Notifikasi', style: TextStyle(color: Colors.black)), // Set text color to black
+                  icon: Icon(Icons.delete, color: Colors.black), 
+                  label: Text('Hapus Semua Notifikasi', style: TextStyle(color: Colors.black)), 
                 ),
               ),
             ),

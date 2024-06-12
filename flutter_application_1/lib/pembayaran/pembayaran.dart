@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tubes_5_wavecare/daftarDokter/daftardokter.dart';
 import 'package:tubes_5_wavecare/faq/FAQ.dart';
 import 'package:tubes_5_wavecare/homepage.dart';
@@ -30,15 +31,32 @@ class _PembayaranPageState extends State<PembayaranPage> {
   int _selectedIndex = 3; // Indeks item yang sedang dipilih
   List<Map<String, dynamic>> paymentHistory = [];
   String token = ''; // Simpan token setelah login
-  int userId = 1; // Asumsikan kita memiliki user ID setelah login
+  int? userId; // Asumsikan kita memiliki user ID setelah login
 
   @override
   void initState() {
     super.initState();
-    fetchPaymentHistory();
+    _loadUserData();
+  }
+
+  Future<void> _loadUserData() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    setState(() {
+      token = prefs.getString('token') ?? '';
+      userId = prefs.getInt('user_id');
+    });
+
+    if (userId != null && token.isNotEmpty) {
+      fetchPaymentHistory();
+    } else {
+      // Handle error: user data not found
+      print('User ID or token not found in SharedPreferences');
+    }
   }
 
   Future<void> fetchPaymentHistory() async {
+    if (userId == null) return;
+
     final url = Uri.parse(
         'http://127.0.0.1:8001/pendaftaran/getPaymentHistory/$userId');
     final response = await http.get(
@@ -80,7 +98,7 @@ class _PembayaranPageState extends State<PembayaranPage> {
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => kartu()),
+          MaterialPageRoute(builder: (context) => Kartu()),
         );
         break;
       case 3:

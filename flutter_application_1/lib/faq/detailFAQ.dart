@@ -4,11 +4,11 @@ import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 void main() {
-  runApp(const DetailFAQ());
+  runApp(const DetailFAQ(idFaq: 1,));
 }
 
 class DetailFAQ extends StatelessWidget {
-  const DetailFAQ({Key? key}) : super(key: key);
+  const DetailFAQ({Key? key, required int idFaq}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

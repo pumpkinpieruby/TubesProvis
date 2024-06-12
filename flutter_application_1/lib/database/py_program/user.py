@@ -22,6 +22,13 @@ class User(BaseModel):
     user_tanggal_lahir: str
     user_bpjs: str
 
+class UserUpdate(BaseModel):
+    user_nama: str
+    user_no_telp: str
+    user_nik: str
+    user_tanggal_lahir: str
+    user_bpjs: str
+
 class UserInDB(User):
     hashed_password: str
 
@@ -151,3 +158,31 @@ def get_all_users(current_user: User = Depends(get_current_user)):
 @router.get("/getUserInfo", response_model=User)
 def get_user_info(current_user: User = Depends(get_current_user)):
     return current_user
+
+def blacklist_token(token: str):
+    conn = sqlite3.connect("carewave.db")
+    cursor = conn.cursor()
+    cursor.execute("INSERT INTO token_blacklist (token) VALUES (?)", (token,))
+    conn.commit()
+    conn.close()
+
+@router.post("/logout")
+def logout(current_user: User = Depends(get_current_user), token: str = Depends(oauth2_scheme)):
+    blacklist_token(token)
+    return {"message": "Successfully logged out"}
+
+def update_user_profile(user_id: str, user_update: UserUpdate):
+    conn = sqlite3.connect("carewave.db")
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE user
+        SET user_nama = ?, user_no_telp = ?, user_nik = ?, user_tanggal_lahir = ?, user_bpjs = ?
+        WHERE user_email = ?
+    """, (user_update.user_nama, user_update.user_no_telp, user_update.user_nik, user_update.user_tanggal_lahir, user_update.user_bpjs, user_id))
+    conn.commit()
+    conn.close()
+
+@router.put("/update_profile", response_model=User)
+def update_profile(user_update: UserUpdate, current_user: User = Depends(get_current_user)):
+    update_user_profile(current_user.user_email, user_update)
+    return get_user_by_email(current_user.user_email)
