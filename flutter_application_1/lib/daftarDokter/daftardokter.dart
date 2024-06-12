@@ -4,8 +4,91 @@ import 'package:tubes_5_wavecare/faq/FAQ.dart';
 import 'package:tubes_5_wavecare/homepage.dart';
 import 'package:tubes_5_wavecare/kartu.dart';
 import 'package:tubes_5_wavecare/pembayaran/pembayaran.dart';
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
 void main() {
   runApp(DaftarDokterApp());
+}
+
+class DoctorService {
+  static const String baseUrl = 'http://127.0.0.1:8001/dokter'; // Update this based on your testing environment
+
+  Future<Map<String, dynamic>> addDoctor(Map<String, dynamic> doctorData) async {
+    final response = await http.post(
+      Uri.parse('$baseUrl/addDoctor'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(doctorData),
+    );
+
+    if (response.statusCode == 201) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to add doctor');
+    }
+  }
+
+  Future<Map<String, dynamic>> getDoctor(int idDoctor) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/getDoctor/$idDoctor'),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load doctor');
+    }
+  }
+
+  Future<List<Map<String, dynamic>>> getAllDoctors() async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/getAllDoctors'),
+    );
+
+    if (response.statusCode == 200) {
+      List<dynamic> doctors = json.decode(response.body);
+      return doctors.map((doctor) => doctor as Map<String, dynamic>).toList();
+    } else {
+      print('Error: ${response.statusCode} ${response.reasonPhrase}');
+      throw Exception('Failed to load doctors');
+    }
+  }
+
+  Future<Map<String, dynamic>> updateDoctor(int idDoctor, Map<String, dynamic> doctorData) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/updateDoctor/$idDoctor'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(doctorData),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to update doctor');
+    }
+  }
+
+  Future<void> deleteDoctor(int idDoctor) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/deleteDoctor/$idDoctor'),
+    );
+
+    if (response.statusCode != 200) {
+      throw Exception('Failed to delete doctor');
+    }
+  }
+
+  Future<Map<String, dynamic>> getDoctorDetails(int idDoctor) async {
+    final response = await http.get(
+      Uri.parse('$baseUrl/getDoctorDetails/$idDoctor'),
+    );
+
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load doctor details');
+    }
+  }
 }
 
 class DaftarDokterApp extends StatelessWidget {
@@ -64,7 +147,7 @@ class _DaftarDokterPageState extends State<DaftarDokterPage> {
       case 2:
         Navigator.push(
           context,
-          MaterialPageRoute(builder: (context) => kartu()),
+          MaterialPageRoute(builder: (context) => Kartu()),
         );
         break;
       case 3:
@@ -96,9 +179,9 @@ class _DaftarDokterPageState extends State<DaftarDokterPage> {
             child: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
                 final List<String> allSpecialists = doctors
-                .map((doctor) => doctor['doctor_poli'] as String)
-                .toSet()
-                .toList();
+                    .map((doctor) => doctor['doctor_poli'] as String)
+                    .toSet()
+                    .toList();
                 return Column(
                   mainAxisSize: MainAxisSize.min,
                   children: allSpecialists.map((spesialis) {
@@ -334,6 +417,7 @@ class DokterCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
+        print('Navigating to DetailDokterPage with idDoctor: $idDoctor'); // Debug print
         Navigator.push(
           context,
           MaterialPageRoute(

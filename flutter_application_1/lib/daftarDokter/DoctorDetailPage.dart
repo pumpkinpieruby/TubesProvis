@@ -1,75 +1,13 @@
 import 'package:flutter/material.dart';
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-
+import 'package:tubes_5_wavecare/daftarDokter/daftardokter.dart';
 
 class DoctorService {
-  static const String baseUrl = 'http://yourapiurl.com';
+  static const String baseUrl = 'http://127.0.0.1:8001/dokter';
 
-  Future<Map<String, dynamic>> addDoctor(Map<String, dynamic> doctorData) async {
-    final response = await http.post(
-      Uri.parse('$baseUrl/addDoctor'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(doctorData),
-    );
 
-    if (response.statusCode == 201) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to add doctor');
-    }
-  }
-
-  Future<Map<String, dynamic>> getDoctor(int idDoctor) async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/getDoctor/$idDoctor'),
-    );
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to load doctor');
-    }
-  }
-
-  Future<List<Map<String, dynamic>>> getAllDoctors() async {
-    final response = await http.get(
-      Uri.parse('$baseUrl/getAllDoctors'),
-    );
-
-    if (response.statusCode == 200) {
-      List<dynamic> doctors = json.decode(response.body);
-      return doctors.map((doctor) => doctor as Map<String, dynamic>).toList();
-    } else {
-      throw Exception('Failed to load doctors');
-    }
-  }
-
-  Future<Map<String, dynamic>> updateDoctor(int idDoctor, Map<String, dynamic> doctorData) async {
-    final response = await http.put(
-      Uri.parse('$baseUrl/updateDoctor/$idDoctor'),
-      headers: {'Content-Type': 'application/json'},
-      body: json.encode(doctorData),
-    );
-
-    if (response.statusCode == 200) {
-      return json.decode(response.body);
-    } else {
-      throw Exception('Failed to update doctor');
-    }
-  }
-
-  Future<void> deleteDoctor(int idDoctor) async {
-    final response = await http.delete(
-      Uri.parse('$baseUrl/deleteDoctor/$idDoctor'),
-    );
-
-    if (response.statusCode != 200) {
-      throw Exception('Failed to delete doctor');
-    }
-  }
-  
-   Future<Map<String, dynamic>> getDoctorDetails(int idDoctor) async {
+  Future<Map<String, dynamic>> getDoctorDetails(int idDoctor) async {
     final response = await http.get(
       Uri.parse('$baseUrl/getDoctorDetails/$idDoctor'),
     );
@@ -85,12 +23,22 @@ class DoctorService {
 class DetailDokterPage extends StatelessWidget {
   final int idDoctor;
 
-  DetailDokterPage({required this.idDoctor});
+  DetailDokterPage({required this.idDoctor}) {
+    print('DetailDokterPage created with idDoctor: $idDoctor'); // Debug print
+  }
 
   final DoctorService _doctorService = DoctorService();
 
   Future<Map<String, dynamic>> fetchDoctorDetails() async {
-    return await _doctorService.getDoctorDetails(idDoctor);
+    print('Fetching details for doctor with id: $idDoctor'); // Debug print
+    try {
+      final details = await _doctorService.getDoctorDetails(idDoctor);
+      print('Doctor details fetched: $details'); // Debug print
+      return details;
+    } catch (e) {
+      print('Error fetching doctor details: $e'); // Debug print
+      rethrow;
+    }
   }
 
   @override
@@ -278,7 +226,7 @@ class DetailDokterPage extends StatelessWidget {
                           ),
                         ),
                         Text(
-                          '- Jam Masuk: ${doctor['jadwal']['jam_masuk'] ?? ''}',
+                          '- Jam Masuk: ${doctor['jadwal']['jam_masuk'] ??''}',
                           style: TextStyle(
                             fontSize: 16.0,
                           ),
@@ -297,23 +245,6 @@ class DetailDokterPage extends StatelessWidget {
             ),
           );
         },
-      ),
-    );
-  }
-}
-class JadwalPraktikPage extends StatelessWidget {
-  final String hari;
-
-  JadwalPraktikPage({required this.hari});
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text('Jadwal Praktik'),
-      ),
-      body: Center(
-        child: Text('Jadwal Praktik untuk Hari $hari'),
       ),
     );
   }

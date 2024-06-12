@@ -18,7 +18,7 @@ class Pendaftaran3 extends StatefulWidget {
 
 class _Pendaftaran3State extends State<Pendaftaran3> {
   Map<String, dynamic>? pendaftaranDetail;
-  String token = ''; // Simpan token setelah login
+  String token = 'YOUR_TOKEN_HERE'; // Gantilah dengan token yang benar
 
   @override
   void initState() {
@@ -39,9 +39,11 @@ class _Pendaftaran3State extends State<Pendaftaran3> {
     if (response.statusCode == 200) {
       setState(() {
         pendaftaranDetail = json.decode(response.body);
+        print('Detail fetched: $pendaftaranDetail');
       });
     } else {
-      print('Failed to fetch registration detail');
+      print('Failed to fetch registration detail. Status code: ${response.statusCode}');
+      print('Response body: ${response.body}');
     }
   }
 
@@ -88,7 +90,7 @@ class _Pendaftaran3State extends State<Pendaftaran3> {
                         children: [
                           ListTile(
                             title: Text('Nama Pasien'),
-                            trailing: Text(pendaftaranDetail!['nama_pasien']),
+                            trailing: Text(pendaftaranDetail!['nama_pasien'] ?? 'Unknown'),
                           ),
                           ListTile(
                             title: Text('Nomor Pendaftaran'),
@@ -97,19 +99,19 @@ class _Pendaftaran3State extends State<Pendaftaran3> {
                           ),
                           ListTile(
                             title: Text('Tanggal Pemeriksaan'),
-                            trailing: Text(pendaftaranDetail!['tanggal']),
+                            trailing: Text(pendaftaranDetail!['tanggal'] ?? 'Unknown'),
                           ),
                           ListTile(
                             title: Text('Jam Pemeriksaan'),
-                            trailing: Text(pendaftaranDetail!['jam']),
+                            trailing: Text(pendaftaranDetail!['jam'] ?? 'Unknown'),
                           ),
                           ListTile(
                             title: Text('Poli'),
-                            trailing: Text(pendaftaranDetail!['poli']),
+                            trailing: Text(pendaftaranDetail!['poli'] ?? 'Unknown'),
                           ),
                           ListTile(
                             title: Text('Dokter'),
-                            trailing: Text(pendaftaranDetail!['nama_dokter']),
+                            trailing: Text(pendaftaranDetail!['nama_dokter'] ?? 'Unknown'),
                           ),
                         ],
                       ),
@@ -121,8 +123,7 @@ class _Pendaftaran3State extends State<Pendaftaran3> {
                           Navigator.pushReplacement(
                             context,
                             MaterialPageRoute(
-                                builder: (context) =>
-                                    detailTagihan(idPendaftaran: 1)),
+                                builder: (context) => detailTagihan(idPendaftaran: widget.idPendaftaran)),
                           );
                         },
                         style: ElevatedButton.styleFrom(
