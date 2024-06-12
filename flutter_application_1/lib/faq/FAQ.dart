@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tubes_5_wavecare/daftarDokter/daftardokter.dart';
 import 'package:tubes_5_wavecare/faq/detailFAQ.dart';
+import 'package:tubes_5_wavecare/faq/detailFAQ2.dart';
 import 'package:tubes_5_wavecare/homepage.dart';
 import 'package:tubes_5_wavecare/kartu.dart';
 import 'package:tubes_5_wavecare/pembayaran/pembayaran.dart';
@@ -22,6 +23,7 @@ class Faq extends StatelessWidget {
       ),
       routes: {
         "/detailFAQ": (context) => DetailFAQ(),
+        "/detailFAQ2": (context) => DetailFAQ2(),
       },
       home: const MyHomePage(title: 'FAQ'),
     );
@@ -141,10 +143,12 @@ class _MyHomePageState extends State<MyHomePage> {
                 ),
                 SizedBox(height: 20),
                 Column(
-                  children: filteredFaqList.map((faq) {
+                  children: filteredFaqList.asMap().entries.map((entry) {
+                    int index = entry.key;
+                    String faq = entry.value;
                     return Column(
                       children: [
-                        _buildFaqItem(faq),
+                        _buildFaqItem(index, faq),
                         SizedBox(height: 20), // Berikan jarak antar box container
                       ],
                     );
@@ -259,10 +263,15 @@ class _MyHomePageState extends State<MyHomePage> {
     );
   }
 
-  Widget _buildFaqItem(String question) {
+  Widget _buildFaqItem(int id, String question) {
     return GestureDetector(
       onTap: () {
-        Navigator.pushNamed(context, "/detailFAQ");
+        // Navigate to the appropriate detail page based on the id
+        if (id == 1) {
+          Navigator.pushNamed(context, "/detailFAQ");
+        } else if (id == 2) {
+          Navigator.pushNamed(context, "/detailFAQ2");
+        }
       },
       child: Container(
         height: 60,
@@ -279,7 +288,12 @@ class _MyHomePageState extends State<MyHomePage> {
             Expanded(
               child: InkWell(
                 onTap: () {
-                  Navigator.pushNamed(context, "/detailFAQ");
+                  // Navigate to the appropriate detail page based on the id
+                  if (id == 1) {
+                    Navigator.pushNamed(context, "/detailFAQ");
+                  } else if (id == 2) {
+                    Navigator.pushNamed(context, "/detailFAQ2");
+                  }
                 },
                 child: Text(
                   question,
@@ -293,9 +307,17 @@ class _MyHomePageState extends State<MyHomePage> {
             ),
             InkWell(
               onTap: () {
-                Navigator.pushNamed(context, "/detailFAQ");
+                // Navigate to the appropriate detail page based on the id
+                if (id == 1) {
+                  Navigator.pushNamed(context, "/detailFAQ");
+                } else if (id == 2) {
+                  Navigator.pushNamed(context, "/detailFAQ2");
+                }
               },
-              child: Icon(Icons.navigate_next, color: Colors.black), // Icon "> "
+              child: Icon(
+                Icons.arrow_forward_ios,
+                color: Colors.blue,
+              ),
             ),
           ],
         ),

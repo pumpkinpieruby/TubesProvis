@@ -4,7 +4,6 @@ import 'package:tubes_5_wavecare/faq/FAQ.dart';
 import 'package:tubes_5_wavecare/homepage.dart';
 import 'package:tubes_5_wavecare/kartu.dart';
 import 'package:tubes_5_wavecare/pembayaran/pembayaran.dart';
-
 void main() {
   runApp(DaftarDokterApp());
 }
@@ -24,32 +23,35 @@ class DaftarDokterPage extends StatefulWidget {
 }
 
 class _DaftarDokterPageState extends State<DaftarDokterPage> {
-  final Map<String, List<String>> daftarDokter = {
-    'Spesialis Umum': ['Dian Ismaya', 'Dino Halim', 'Landry Miguna'],
-    'Spesialis Saraf': ['Ada Wong', 'Ahmad Ibrahim'],
-    'Spesialis Anak': ['Natasha', 'Bai Lu'],
-    'Spesialis THT': ['Amanda Tan', 'Caroline Wong'],
-    'Spesialis Penyakit Dalam': ['Farah Rahman', 'Linda Patel'],
-    'Spesialis Mata': ['Michael Nguyen', 'Tina Chen'],
-    'Spesialis Gigi': ['Xander Liu', 'Bella Wang', 'Yuki Tanaka'],
-    'Spesialis Jantung': ['Leon Kenedy', 'Cocolia'],
-    'Spesialis Kulit': ['Priya Sharma', 'Valerie Johnson'],
-    'Spesialis Tulang': ['Ayumi Nishimura'],
-    'Spesialis Bedah': ['Aiko Tanaka', 'Daichi Suzuki', 'Renjiro Sato', 'Yukihiro Mori'],
-    'Spesialis Kandungan': ['Kenjiro Ono', 'Mai Nakamura'],
-    'Spesialis Psikiatri': ['Noboru Yamaguchi', 'Riko Saito', 'Kai Ito']
-  };
-
+  List<Map<String, dynamic>> doctors = [];
   List<String> spesialisFilter = [];
   String searchQuery = '';
   int _selectedIndex = 1; // Indeks item yang sedang dipilih
+
+  final DoctorService _doctorService = DoctorService();
+
+  @override
+  void initState() {
+    super.initState();
+    fetchDoctors();
+  }
+
+  Future<void> fetchDoctors() async {
+    try {
+      final result = await _doctorService.getAllDoctors();
+      setState(() {
+        doctors = result;
+      });
+    } catch (e) {
+      print('Failed to fetch doctors: $e');
+    }
+  }
 
   void _onItemTapped(int index) {
     setState(() {
       _selectedIndex = index;
     });
 
-    // Navigasi ke halaman yang sesuai berdasarkan indeks ikon yang diklik
     switch (index) {
       case 0:
         Navigator.push(
@@ -58,7 +60,6 @@ class _DaftarDokterPageState extends State<DaftarDokterPage> {
         );
         break;
       case 1:
-        // Tidak perlu navigasi ke halaman saat indeks 1 karena sudah berada di DaftarDokterPage
         break;
       case 2:
         Navigator.push(
@@ -82,7 +83,7 @@ class _DaftarDokterPageState extends State<DaftarDokterPage> {
   }
 
   void _onCreditCardPressed() {
-    _onItemTapped(2); // Navigasi ke halaman kartu saat floating action button ditekan
+    _onItemTapped(2);
   }
 
   void _showFilterDialog() {
@@ -94,9 +95,13 @@ class _DaftarDokterPageState extends State<DaftarDokterPage> {
           content: SingleChildScrollView(
             child: StatefulBuilder(
               builder: (BuildContext context, StateSetter setState) {
+                final List<String> allSpecialists = doctors
+                .map((doctor) => doctor['doctor_poli'] as String)
+                .toSet()
+                .toList();
                 return Column(
                   mainAxisSize: MainAxisSize.min,
-                  children: daftarDokter.keys.map((spesialis) {
+                  children: allSpecialists.map((spesialis) {
                     bool isChecked = spesialisFilter.contains(spesialis);
                     return CheckboxListTile(
                       title: Text(spesialis),
@@ -138,6 +143,15 @@ class _DaftarDokterPageState extends State<DaftarDokterPage> {
 
   @override
   Widget build(BuildContext context) {
+    List<Map<String, dynamic>> filteredDoctors = doctors.where((doctor) {
+      final nameMatch = doctor['doctor_name']
+          .toLowerCase()
+          .contains(searchQuery.toLowerCase());
+      final specialistMatch = spesialisFilter.isEmpty ||
+          spesialisFilter.contains(doctor['doctor_poli']);
+      return nameMatch && specialistMatch;
+    }).toList();
+
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
@@ -145,7 +159,7 @@ class _DaftarDokterPageState extends State<DaftarDokterPage> {
           'Daftar Dokter',
           style: TextStyle(color: Colors.blue),
         ),
-        backgroundColor: Colors.transparent, // Atur background AppBar menjadi transparan
+        backgroundColor: Colors.transparent,
         elevation: 0,
       ),
       body: Padding(
@@ -179,45 +193,20 @@ class _DaftarDokterPageState extends State<DaftarDokterPage> {
             ),
             SizedBox(height: 8.0),
             Expanded(
-              child: ListView(
-                children: daftarDokter.entries
-                    .where((entry) =>
-                        spesialisFilter.isEmpty || spesialisFilter.contains(entry.key))
-                    .map((entry) {
-                  String spesialis = entry.key;
-                  List<String> daftarDokterSpesialis = entry.value
-                      .where((dokter) => dokter.toLowerCase().contains(searchQuery.toLowerCase()))
-                      .toList();
-                  return Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8.0),
-                        child: Text(
-                          spesialis,
-                          style: TextStyle(
-                            fontSize: 18.0,
-                            fontWeight: FontWeight.bold,
-                          ),
-                        ),
-                      ),
-                      ...daftarDokterSpesialis.map((dokter) {
-                        String gelar = _getGelarDokter(spesialis);
-                        return Padding(
-                          padding: const EdgeInsets.all(8.0),
-                          child: DokterCard(
-                            namaDokter: 'Dr. $dokter, $gelar',
-                            spesialis: spesialis,
-                            rating: 4.5,
-                            nomorStr: '',
-                            riwayatPendidikan: [],
-                            riwayatPraktik: [],
-                          ),
-                        );
-                      }).toList(),
-                    ],
+              child: ListView.builder(
+                itemCount: filteredDoctors.length,
+                itemBuilder: (context, index) {
+                  final doctor = filteredDoctors[index];
+                  return Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: DokterCard(
+                      idDoctor: doctor['id_doctor'],
+                      namaDokter: doctor['doctor_name'],
+                      spesialis: doctor['doctor_poli'],
+                      rating: 4.5,
+                    ),
                   );
-                }).toList(),
+                },
               ),
             ),
           ],
@@ -326,79 +315,34 @@ class _DaftarDokterPageState extends State<DaftarDokterPage> {
       ),
     );
   }
-
-  String _getGelarDokter(String spesialis) {
-    switch (spesialis) {
-      case 'Spesialis Umum':
-        return '';
-      case 'Spesialis Saraf':
-        return 'Sp.S';
-      case 'Spesialis Anak':
-        return 'Sp.A';
-      case 'Spesialis THT':
-        return 'Sp.THT';
-      case 'Spesialis Penyakit Dalam':
-        return 'Sp.PD';
-      case 'Spesialis Mata':
-        return 'Sp.M';
-      case 'Spesialis Gigi':
-        return 'Drg.';
-      case 'Spesialis Jantung':
-        return 'Sp.JP';
-      case 'Spesialis Kulit':
-        return 'Sp.KK';
-      case 'Spesialis Tulang':
-        return 'Sp.OT';
-      case 'Spesialis Bedah':
-        return 'Sp.B';
-      case 'Spesialis Kandungan':
-        return 'Sp.OG';
-      case 'Spesialis Psikiatri':
-        return 'Sp.KJ';
-      default:
-        return '';
-    }
-  }
 }
 
 class DokterCard extends StatelessWidget {
+  final int idDoctor;
   final String namaDokter;
   final String spesialis;
   final double rating;
-  final String nomorStr;
-  final List<String> riwayatPendidikan;
-  final List<String> riwayatPraktik;
 
   DokterCard({
+    required this.idDoctor,
     required this.namaDokter,
     required this.spesialis,
     required this.rating,
-    required this.nomorStr,
-    required this.riwayatPendidikan,
-    required this.riwayatPraktik,
   });
 
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        // Navigasi ke halaman detail dokter
         Navigator.push(
           context,
           MaterialPageRoute(
-            builder: (context) => DetailDokterPage(
-              namaDokter: namaDokter,
-              spesialis: spesialis,
-              rating: rating,
-              nomorStr: nomorStr,
-              riwayatPendidikan: riwayatPendidikan,
-              riwayatPraktik: riwayatPraktik,
-            ),
+            builder: (context) => DetailDokterPage(idDoctor: idDoctor),
           ),
         );
       },
       child: Card(
-        color: Colors.lightBlue[100], // Atur warna latar belakang Card
+        color: Colors.lightBlue[100],
         child: Padding(
           padding: const EdgeInsets.all(16.0),
           child: Row(
